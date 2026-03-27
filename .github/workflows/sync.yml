@@ -1,0 +1,157 @@
+name: Sync
+
+on:
+  workflow_dispatch:
+    # inputs:
+    #   repo:
+    #     type: string
+    #     description: 'Target repo'
+    #     required: false
+    #     default: ''
+  schedule:
+    - cron: '2 13 4 * *'
+  push:
+
+concurrency:
+  group: sync
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      # - uses: actions/checkout@v6
+
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: aosp-mirror-neo
+
+      - name: Get GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
+      - run: |
+          git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
+          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
+
+      - name: Sync
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          # set -x
+
+          # not required
+          git config --global init.defaultBranch main
+
+          MAX_JOBS=7
+
+          tmp_fifo=$(mktemp -u)
+          mkfifo "$tmp_fifo"
+          exec 3<>"$tmp_fifo"
+          # rm "$tmp_fifo"
+
+          for ((i=0; i<MAX_JOBS; i++)); do
+            echo >&3
+          done
+
+          echo "===== 'df -h' ====="
+          df -h
+          echo "==================="
+
+          sudo mkdir /mnt/sync
+          sudo chown runner:runner -R /mnt/sync
+
+          curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | \
+          while IFS= read -r config; do
+            read -u 3
+            cd /mnt/sync
+
+            export config
+
+            (
+              set +e
+
+              url=$(echo "$config" | jq -r '.clone_url')
+              repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
+              description=$(echo "$config" | jq -r '.description')
+              first="0"
+
+              echo "target: $repo"
+
+              mkdir "$repo" && cd "$repo"
+
+              echo "[$repo] Check if the mirror repository is created"
+              gh repo view "aosp-mirror-neo/$repo" > /dev/null
+              ret="$?"
+              if [ "$ret" -ne 0 ]; then
+                echo "[$repo] Creating target repo"
+                gh repo create "aosp-mirror-neo/$repo" --homepage "$url" --disable-issues --disable-wiki --public --description "$description"
+                first="1"
+              fi
+
+              echo "[$repo] Compare remotes"
+              git ls-remote --quiet --heads --tags "$url" > remote-src
+              git ls-remote --quiet --heads --tags "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo" > remote-dist
+              diff remote-src remote-dist > /dev/null
+              ret="$?"
+              if [ "$ret" -eq 0 ]; then
+                echo "[$repo] Mirror is synchronized. skip"
+                echo >&3
+                exit
+              fi
+
+              echo "[$repo] Cloning source repo"
+              mkdir repo-dir && cd repo-dir
+              git init --bare
+              git remote add --mirror=fetch origin "$url"
+              git remote add mirror "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo"
+
+              git config unset --all remote.origin.fetch
+              git config unset --all remote.mirror.fetch
+              git config set --append remote.origin.fetch '+refs/heads/*:refs/heads/*'
+              git config set --append remote.mirror.fetch '+refs/heads/*:refs/heads/*'
+              git config set --append remote.origin.fetch '+refs/tags/*:refs/tags/*'
+              git config set --append remote.mirror.fetch '+refs/tags/*:refs/tags/*'
+
+              if [ "$first" -eq 0 ]; then
+                git fetch mirror --filter=blob:none
+                git fetch origin
+                ret="$?"
+              else
+                echo "[$repo] First time sync. full cloning"
+                git fetch origin
+                ret="$?"
+              fi
+
+              if [ "$ret" -ne 0 ]; then
+                echo "[$repo] failed to fetch. (err: $?)"
+                echo >&3
+                exit
+              fi
+
+              echo "[$repo] Pushing to mirror repo"
+              git push --mirror mirror
+              gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( git remote show origin | grep "^  HEAD branch: " | cut -c 16- )"
+              cd ..
+              echo "[$repo] Cleaning"
+              rm -rf repo-dir remote-src remote-dist
+              # cd ..
+              echo >&3
+            )&
+          done
+
+          echo "Waiting for all jobs to complete"
+          sleep 0.5
+          for ((i=0; i<MAX_JOBS; i++)); do
+            echo "waiting job: $i"
+            read -u 3
+          done
+          echo "done"
+
+          exec 3>&-
+          exec 3<&-
+          rm "$tmp_fifo"
