@@ -47,7 +47,7 @@ jobs:
           # not required
           git config --global init.defaultBranch main
 
-          MAX_JOBS=7
+          MAX_JOBS=21
 
           tmp_fifo=$(mktemp -u)
           mkfifo "$tmp_fifo"
@@ -63,7 +63,8 @@ jobs:
           echo "==================="
 
           sudo mkdir /mnt/sync
-          sudo chown runner:runner -R /mnt/sync
+          sudo touch /mnt/failed-repos
+          sudo chown runner:runner -R /mnt/sync /mnt/failed-repos
 
           sync_mirror() {
             set -e
