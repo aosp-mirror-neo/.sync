@@ -65,6 +65,70 @@ jobs:
           sudo mkdir /mnt/sync
           sudo chown runner:runner -R /mnt/sync
 
+          sync_mirror() {
+            set -e
+
+            url=$(echo "$config" | jq -r '.clone_url')
+            repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
+            description=$(echo "$config" | jq -r '.description // ""')
+            first="0"
+
+            echo "target: $repo"
+
+            mkdir "$repo" && cd "$repo"
+
+            echo "[$repo] Check if the mirror repository is created"
+            gh repo view "aosp-mirror-neo/$repo" > /dev/null
+            ret="$?"
+            if [ "$ret" -ne 0 ]; then
+              echo "[$repo] Creating target repo"
+              gh repo create "aosp-mirror-neo/$repo" --homepage "$url" --disable-issues --disable-wiki --public --description "$description"
+              first="1"
+            fi
+
+            echo "[$repo] Compare remotes"
+            git ls-remote --quiet --heads --tags "$url" > remote-src
+            git ls-remote --quiet --heads --tags "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo" > remote-dist
+            diff remote-src remote-dist > /dev/null
+            ret="$?"
+            if [ "$ret" -eq 0 ]; then
+              echo "[$repo] Mirror is synchronized. skip"
+              exit
+            fi
+
+            echo "[$repo] Cloning source repo"
+            mkdir repo-dir && cd repo-dir
+            git init --bare
+            git remote add --mirror=fetch origin "$url"
+            git remote add mirror "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo"
+
+            git config unset --all remote.origin.fetch
+            git config unset --all remote.mirror.fetch
+            git config set --append remote.origin.fetch '+refs/heads/*:refs/heads/*'
+            git config set --append remote.mirror.fetch '+refs/heads/*:refs/heads/*'
+            git config set --append remote.origin.fetch '+refs/tags/*:refs/tags/*'
+            git config set --append remote.mirror.fetch '+refs/tags/*:refs/tags/*'
+
+            if [ "$first" -eq 0 ]; then
+              git fetch mirror --filter=blob:none &> /dev/null
+              git fetch origin &> /dev/null
+              ret="$?"
+            else
+              echo "[$repo] First time sync. full cloning"
+              git fetch origin &> /dev/null
+              ret="$?"
+            fi
+
+            if [ "$ret" -ne 0 ]; then
+              echo "[$repo] failed to fetch. (err: $?)"
+              exit
+            fi
+
+            echo "[$repo] Pushing to mirror repo"
+            git push --mirror mirror &> /dev/null
+            gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( git remote show origin | grep "^  HEAD branch: " | cut -c 16- )"
+          }
+
           curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | \
           while IFS= read -r config; do
             read -u 3
@@ -73,73 +137,14 @@ jobs:
             export config
 
             (
-              set +e
-
-              url=$(echo "$config" | jq -r '.clone_url')
               repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
-              description=$(echo "$config" | jq -r '.description // ""')
-              first="0"
-
-              echo "target: $repo"
-
-              mkdir "$repo" && cd "$repo"
-
-              echo "[$repo] Check if the mirror repository is created"
-              gh repo view "aosp-mirror-neo/$repo" > /dev/null
-              ret="$?"
-              if [ "$ret" -ne 0 ]; then
-                echo "[$repo] Creating target repo"
-                gh repo create "aosp-mirror-neo/$repo" --homepage "$url" --disable-issues --disable-wiki --public --description "$description"
-                first="1"
+              if ! sync_mirror "$config"; then
+                repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
+                echo "$repo" >> /mnt/failed-repos
               fi
-
-              echo "[$repo] Compare remotes"
-              git ls-remote --quiet --heads --tags "$url" > remote-src
-              git ls-remote --quiet --heads --tags "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo" > remote-dist
-              diff remote-src remote-dist > /dev/null
-              ret="$?"
-              if [ "$ret" -eq 0 ]; then
-                echo "[$repo] Mirror is synchronized. skip"
-                echo >&3
-                exit
-              fi
-
-              echo "[$repo] Cloning source repo"
-              mkdir repo-dir && cd repo-dir
-              git init --bare
-              git remote add --mirror=fetch origin "$url"
-              git remote add mirror "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo"
-
-              git config unset --all remote.origin.fetch
-              git config unset --all remote.mirror.fetch
-              git config set --append remote.origin.fetch '+refs/heads/*:refs/heads/*'
-              git config set --append remote.mirror.fetch '+refs/heads/*:refs/heads/*'
-              git config set --append remote.origin.fetch '+refs/tags/*:refs/tags/*'
-              git config set --append remote.mirror.fetch '+refs/tags/*:refs/tags/*'
-
-              if [ "$first" -eq 0 ]; then
-                git fetch mirror --filter=blob:none
-                git fetch origin
-                ret="$?"
-              else
-                echo "[$repo] First time sync. full cloning"
-                git fetch origin
-                ret="$?"
-              fi
-
-              if [ "$ret" -ne 0 ]; then
-                echo "[$repo] failed to fetch. (err: $?)"
-                echo >&3
-                exit
-              fi
-
-              echo "[$repo] Pushing to mirror repo"
-              git push --mirror mirror
-              gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( git remote show origin | grep "^  HEAD branch: " | cut -c 16- )"
-              cd ..
               echo "[$repo] Cleaning"
+              cd "/mnt/sync/$repo"
               rm -rf repo-dir remote-src remote-dist
-              # cd ..
               echo >&3
             )&
           done
@@ -155,3 +160,6 @@ jobs:
           exec 3>&-
           exec 3<&-
           rm "$tmp_fifo"
+
+      - name: List failed repos
+        run: cat /mnt/failed-repos
