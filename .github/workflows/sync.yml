@@ -78,8 +78,10 @@ jobs:
             mkdir "$repo" && cd "$repo"
 
             echo "[$repo] Check if the mirror repository is created"
+            set +e
             gh repo view "aosp-mirror-neo/$repo" > /dev/null
             ret="$?"
+            set -e
             if [ "$ret" -ne 0 ]; then
               echo "[$repo] Creating target repo"
               gh repo create "aosp-mirror-neo/$repo" --homepage "$url" --disable-issues --disable-wiki --public --description "$description"
@@ -89,8 +91,10 @@ jobs:
             echo "[$repo] Compare remotes"
             git ls-remote --quiet --heads --tags "$url" > remote-src
             git ls-remote --quiet --heads --tags "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo" > remote-dist
+            set +e
             diff remote-src remote-dist > /dev/null
             ret="$?"
+            set -e
             if [ "$ret" -eq 0 ]; then
               echo "[$repo] Mirror is synchronized. skip"
               exit
