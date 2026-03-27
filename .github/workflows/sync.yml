@@ -73,8 +73,6 @@ jobs:
             description=$(echo "$config" | jq -r '.description // ""')
             first="0"
 
-            echo "target: $repo"
-
             mkdir "$repo" && cd "$repo"
 
             echo "[$repo] Check if the mirror repository is created"
@@ -142,14 +140,16 @@ jobs:
 
             (
               repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
+              echo "[$repo] Start"
               if ! sync_mirror "$config"; then
-                repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
+                echo "[$repo] Failed"
                 echo "$repo" >> /mnt/failed-repos
               fi
               echo "[$repo] Cleaning"
               cd "/mnt/sync/$repo"
               rm -rf repo-dir remote-src remote-dist
               echo >&3
+              echo "[$repo] Done"
             )&
           done
 
