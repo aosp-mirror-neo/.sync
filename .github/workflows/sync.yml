@@ -131,7 +131,7 @@ jobs:
             gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( git remote show origin | grep "^  HEAD branch: " | cut -c 16- )"
           }
 
-          curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | \
+          curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | shuf | \
           while IFS= read -r config; do
             read -u 3
             cd /mnt/sync
