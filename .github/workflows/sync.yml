@@ -77,7 +77,7 @@ jobs:
 
               url=$(echo "$config" | jq -r '.clone_url')
               repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
-              description=$(echo "$config" | jq -r '.description')
+              description=$(echo "$config" | jq -r '.description // ""')
               first="0"
 
               echo "target: $repo"
