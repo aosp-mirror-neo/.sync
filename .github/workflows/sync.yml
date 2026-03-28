@@ -29,7 +29,7 @@ jobs:
       - name: Split
         id: split
         run: |
-          PARALLEL=8
+          PARALLEL=10
           MATRIX=$(curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | shuf | \
                     split -n l/$PARALLEL --filter='jq -Rs .' | jq -sc .)
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
@@ -193,7 +193,8 @@ jobs:
               rm -rf repo-dir remote-src remote-dist
               end_time=$(date +%s.%N)
               echo "[$repo] Done ($status) ($CURRENT/$TOTAL_COUNT) ($(echo "$end_time - $start_time" | bc) sec)"
-            )&
+            )
+            # )&
           done
 
           echo "Waiting for all jobs to complete"
