@@ -29,7 +29,7 @@ jobs:
       - name: Split
         id: split
         run: |
-          PARALLEL=24
+          PARALLEL=20
           MATRIX=$(curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | shuf | \
                     split -n l/$PARALLEL --filter='jq -Rs .' | jq -sc .)
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
