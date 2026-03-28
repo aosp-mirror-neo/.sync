@@ -60,7 +60,7 @@ jobs:
       - name: Sync
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          CHUNK_DATA: ${{ matrix.chunk.data }}
+          CHUNK_DATA: ${{ matrix.chunk }}
         run: |
           # set -x
 
