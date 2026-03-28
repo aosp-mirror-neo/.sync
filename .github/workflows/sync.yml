@@ -243,9 +243,8 @@ jobs:
                 status="Failed"
               fi
               echo >&3
-              log "Cleaning"
-              cd "/mnt/sync/$repo"
-              rm -rf repo-dir remote-src remote-dist
+              # log "Cleaning"
+              rm -rf "/mnt/sync/$repo" &
               end_time=$(date +%s.%N)
               log "Done ($status) ($CURRENT/$TOTAL_COUNT) ($(echo "$end_time - $start_time" | bc) sec)"
               echo "::endgroup::"
