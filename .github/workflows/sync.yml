@@ -101,7 +101,7 @@ jobs:
             set -e
 
             url=$(jq -r '.clone_url' <<< "$config")
-            repo=$(jq -r '.name' | tr '/' '_' <<< "$config")
+            repo=$(jq -r '.name' <<< "$config" | tr '/' '_')
             description=$(jq -r '.description // ""' <<< "$config")
             first="0"
 
