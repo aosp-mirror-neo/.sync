@@ -21,6 +21,10 @@ jobs:
     steps:
       # - uses: actions/checkout@v6
 
+      - uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+  
       - uses: actions/create-github-app-token@v3
         id: app-token
         with:
