@@ -11,3 +11,7 @@
 /toolchain_prebuilts_ndk_r26
 /toolchain_prebuilts_ndk-darwin_r25
 /toolchain_prebuilts_ndk_releases
+/platform_prebuilts_misc
+/kernel_prebuilts_6.6_x86-64
+/platform_packages_modules_Virtualization
+/device_asus_grouper
