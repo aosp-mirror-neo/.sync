@@ -126,7 +126,7 @@ jobs:
 
             echo "[$repo] Pushing to mirror repo"
             git push --quiet --mirror mirror
-            gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( grep "^  HEAD branch: " ../remote-src | cut -c 16- )"
+            gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( git remote show origin | grep "^  HEAD branch: " | cut -c 16- )"
           }
 
           curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | shuf | \
