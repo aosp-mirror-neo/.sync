@@ -35,8 +35,6 @@ jobs:
       fail-fast: false
       matrix:
         chunk: ${{ fromJson(needs.prepare_matrix.outputs.chunks) }}
-    env:
-      CHUNK_DATA: ${{ matrix.chunk.data }}
     steps:
       # - uses: actions/checkout@v6
 
@@ -62,6 +60,7 @@ jobs:
       - name: Sync
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          CHUNK_DATA: ${{ matrix.chunk.data }}
         run: |
           # set -x
 
