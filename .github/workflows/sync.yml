@@ -15,6 +15,11 @@ on:
 concurrency:
   group: sync
 
+# for beacon-biosignals/matrix-output
+permissions:
+  actions: read
+  contents: read
+
 jobs:
   prepare_matrix:
     runs-on: ubuntu-slim
@@ -36,6 +41,8 @@ jobs:
       fail-fast: false
       matrix:
         chunk: ${{ fromJson(needs.prepare_matrix.outputs.chunks) }}
+    outputs:
+      failed: ${{ steps.matrix-output.outputs.json }}
     steps:
       # - uses: actions/checkout@v6
 
@@ -157,9 +164,13 @@ jobs:
             gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( git remote show origin | grep "^  HEAD branch: " | cut -c 16- )"
           }
 
+          TOTAL_COUNT=$(echo "$CHUNK_DATA" | grep -c '^')
+          CURRENT=0
+
           echo "$CHUNK_DATA" | \
           while IFS= read -r config; do
             read -u 3
+            CURRENT=$((CURRENT + 1))
             cd /mnt/sync
 
             export config
@@ -167,17 +178,19 @@ jobs:
             (
               start_time=$(date +%s.%N)
               repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
+              status="OK"
               echo "[$repo] Start"
               if ! sync_mirror "$config"; then
                 echo "[$repo] Failed"
                 echo "$repo" >> /mnt/failed-repos
+                status="Failed"
               fi
               echo >&3
               echo "[$repo] Cleaning"
               cd "/mnt/sync/$repo"
               rm -rf repo-dir remote-src remote-dist
               end_time=$(date +%s.%N)
-              echo "[$repo] Done ($(echo "$end_time - $start_time" | bc) sec)"
+              echo "[$repo] Done ($status) ($CURRENT/$TOTAL_COUNT) ($(echo "$end_time - $start_time" | bc) sec)"
             )&
           done
 
@@ -195,4 +208,24 @@ jobs:
 
       - name: List failed repos
         if: always()
-        run: cat /mnt/failed-repos
+        id: failed
+        run: |
+          cat /mnt/failed-repos
+          echo "list=$(cat /mnt/failed-repos)" >> $GITHUB_OUTPUT
+
+      - uses: beacon-biosignals/matrix-output@v1
+        id: matrix-output
+        with:
+          yaml: |
+            list: ${{ steps.failed.outputs.list }}
+
+  status:
+    name: Status
+    needs: main
+    runs-on: ubuntu-latest
+    steps:
+      - name: List
+        env:
+          LIST: ${{ needs.main.outputs.failed }}
+        run: |
+          echo "$LIST" | jq -cr '.[].list'
