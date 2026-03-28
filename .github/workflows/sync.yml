@@ -44,7 +44,7 @@ jobs:
     outputs:
       failed: ${{ steps.matrix-output.outputs.json }}
     steps:
-      # - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
       - uses: jlumbroso/free-disk-space@main
         with:
@@ -100,9 +100,9 @@ jobs:
           sync_mirror() {
             set -e
 
-            url=$(echo "$config" | jq -r '.clone_url')
-            repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
-            description=$(echo "$config" | jq -r '.description // ""')
+            url=$(jq -r '.clone_url' <<< "$config")
+            repo=$(jq -r '.name' | tr '/' '_' <<< "$config")
+            description=$(jq -r '.description // ""' <<< "$config")
             first="0"
 
             mkdir "$repo" && cd "$repo"
@@ -169,6 +169,8 @@ jobs:
 
           echo "$CHUNK_DATA" | \
           while IFS= read -r config; do
+            [ -z "$config" ] && continue
+
             read -u 3
             CURRENT=$((CURRENT + 1))
             cd /mnt/sync
@@ -214,6 +216,7 @@ jobs:
           echo "list=$(cat /mnt/failed-repos)" >> $GITHUB_OUTPUT
 
       - uses: beacon-biosignals/matrix-output@v1
+        if: always()
         id: matrix-output
         with:
           yaml: |
