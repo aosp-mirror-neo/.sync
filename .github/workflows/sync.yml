@@ -32,8 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: prepare_matrix
     strategy:
+      fail-fast: false
       matrix:
         chunk: ${{ fromJson(needs.prepare_matrix.outputs.chunks) }}
+    env:
+      CHUNK_DATA: ${{ matrix.chunk.data }}
     steps:
       # - uses: actions/checkout@v6
 
@@ -149,7 +152,7 @@ jobs:
             gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( git remote show origin | grep "^  HEAD branch: " | cut -c 16- )"
           }
 
-          echo "${{ matrix.chunk }}" | \
+          echo "$CHUNK_DATA" | \
           while IFS= read -r config; do
             read -u 3
             cd /mnt/sync
