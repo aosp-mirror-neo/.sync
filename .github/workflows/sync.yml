@@ -24,8 +24,9 @@ jobs:
       - name: Split
         id: split
         run: |
+          PARALLEL=8
           MATRIX=$(curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | shuf | \
-                    split -n l/7 --filter='jq -Rs .' | jq -sc .)
+                    split -n l/$PARALLEL --filter='jq -Rs .' | jq -sc .)
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
   main:
@@ -56,6 +57,11 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - run: df -h
+
+      - name: List targets
+        env:
+          CHUNK_DATA: ${{ matrix.chunk }}
+        run: echo "$CHUNK_DATA"
 
       - name: Sync
         env:
