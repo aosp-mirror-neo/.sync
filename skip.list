@@ -6,3 +6,5 @@
 /toolchain_prebuilts_ndk-darwin_r23
 /platform_prebuilts_clang_host_linux-arm64
 /platform_external_libabigail
+/device_linaro_dragonboard-kernel
+/platform_prebuilts_clang_linux-x86_host_3.5
