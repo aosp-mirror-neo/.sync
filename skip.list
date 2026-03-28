@@ -8,3 +8,5 @@
 /platform_external_libabigail
 /device_linaro_dragonboard-kernel
 /platform_prebuilts_clang_linux-x86_host_3.5
+/toolchain_prebuilts_ndk_r26
+/toolchain_prebuilts_ndk-darwin_r25
