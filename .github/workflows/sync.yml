@@ -29,7 +29,7 @@ jobs:
       - name: Split
         id: split
         run: |
-          PARALLEL=17
+          PARALLEL=25
           MATRIX=$(curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | shuf | \
                     split -n l/$PARALLEL --filter='jq -Rs .' | jq -sc .)
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
@@ -44,11 +44,16 @@ jobs:
     # outputs:
     #   failed: ${{ steps.matrix-output.outputs.json }}
     steps:
+      - name: List targets
+        env:
+          CHUNK_DATA: ${{ matrix.chunk }}
+        run: echo "$CHUNK_DATA"
+
       - uses: actions/checkout@v6
 
-      - uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: true
+      # - uses: jlumbroso/free-disk-space@main
+      #   with:
+      #     tool-cache: true
   
       - uses: actions/create-github-app-token@v3
         id: app-token
@@ -64,11 +69,6 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - run: df -h
-
-      - name: List targets
-        env:
-          CHUNK_DATA: ${{ matrix.chunk }}
-        run: echo "$CHUNK_DATA"
 
       - name: Sync
         env:
@@ -171,23 +171,23 @@ jobs:
               COMMIT_REVS=($(git rev-list --reverse HEAD))
               TOTAL=${#COMMIT_REVS[@]}
               CURRENT_BRANCH=$(git branch --show-current)
-              
+
               MAX_BATCH=100000
               MIN_BATCH=1
               BATCH=10000
               STEP=2000
               INDEX=0
-              
+
               log "Total: $TOTAL commits."
-              
+
               while [ $INDEX -lt $TOTAL ]; do
                 REMAINING=$((TOTAL - INDEX))
                 [ $BATCH -gt $REMAINING ] && CURRENT_TRY=$REMAINING || CURRENT_TRY=$BATCH
-                
+
                 TARGET_REV=${COMMIT_REVS[$((INDEX + CURRENT_TRY - 1))]}
-                
+
                 log "--- Attempting: $CURRENT_TRY commits (Total Progress: $((INDEX + CURRENT_TRY))/$TOTAL) ---"
-            
+
                 if git push mirror "$TARGET_REV:refs/heads/$CURRENT_BRANCH"; then
                   log ">> Success."
                   INDEX=$((INDEX + CURRENT_TRY))
@@ -196,9 +196,9 @@ jobs:
                   log ">> Increasing batch size to $BATCH for next step."
                 else
                   log ">> Failed! Reducing batch size..."
-                  
+
                   BATCH=$((BATCH / 2))
-                  
+
                   if [ $BATCH -lt $MIN_BATCH ]; then
                     if [ $CURRENT_TRY -eq 1 ]; then
                       log "Fatal: Single commit push failed. Check for large files or remote limits."
@@ -219,7 +219,6 @@ jobs:
           CURRENT=0
           cd /mnt/sync
 
-          echo "$CHUNK_DATA" | \
           while IFS= read -r config; do
             [ -z "$config" ] && continue
 
@@ -252,7 +251,7 @@ jobs:
               echo "::endgroup::"
             )
             # )&
-          done
+          done <<< "$CHUNK_DATA"
 
           echo "Waiting for all jobs to complete"
           sleep 0.5
