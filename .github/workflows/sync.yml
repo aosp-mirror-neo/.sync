@@ -109,7 +109,7 @@ jobs:
 
             url=$(jq -r '.clone_url' <<< "$config")
             repo=$(jq -r '.name' <<< "$config" | tr '/' '_')
-            description=$(jq -r '.description // ""' <<< "$config")
+            description=$(jq -r '(.description | tojson) // ""' <<< "$config")
             first="0"
 
             mkdir "$repo" && cd "$repo"
@@ -202,7 +202,7 @@ jobs:
                   if [ $BATCH -lt $MIN_BATCH ]; then
                     if [ $CURRENT_TRY -eq 1 ]; then
                       log "Fatal: Single commit push failed. Check for large files or remote limits."
-                      exit 1
+                      return 1
                     fi
                     BATCH=$MIN_BATCH
                   fi
@@ -215,7 +215,7 @@ jobs:
             gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( git remote show origin | grep "^  HEAD branch: " | cut -c 16- )"
           }
 
-          TOTAL_COUNT=$(echo "$CHUNK_DATA" | grep -c '^')
+          TOTAL_COUNT=$(grep -c '^' <<<  "$CHUNK_DATA")
           CURRENT=0
           cd /mnt/sync
 
@@ -228,7 +228,7 @@ jobs:
 
             (
               start_time=$(date +%s.%N)
-              repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
+              repo=$(jq -r '.name' <<< "$config" | tr '/' '_')
               status="OK"
               echo "::group::$repo"
               log "Start"
