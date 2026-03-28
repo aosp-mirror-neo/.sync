@@ -197,10 +197,14 @@ jobs:
                 else
                   log ">> Failed! Reducing batch size..."
 
-                  if [ $BATCH -le 3 ]; then
-                    BATCH=$((BATCH - 1))
+                  if [ $BATCH -gt $CURRENT_TRY ]; then
+                    BATCH=$CURRENT_TRY
                   else
-                    BATCH=$((BATCH / 2))
+                    if [ $BATCH -le 3 ]; then
+                      BATCH=$((BATCH - 1))
+                    else
+                      BATCH=$((BATCH / 2))
+                    fi
                   fi
 
                   if [ $BATCH -lt $MIN_BATCH ]; then
