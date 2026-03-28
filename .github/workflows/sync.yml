@@ -166,6 +166,7 @@ jobs:
 
           TOTAL_COUNT=$(echo "$CHUNK_DATA" | grep -c '^')
           CURRENT=0
+          cd /mnt/sync
 
           echo "$CHUNK_DATA" | \
           while IFS= read -r config; do
@@ -173,14 +174,13 @@ jobs:
 
             read -u 3
             CURRENT=$((CURRENT + 1))
-            cd /mnt/sync
-
             export config
 
             (
               start_time=$(date +%s.%N)
               repo=$(echo "$config" | jq -r '.name' | tr '/' '_')
               status="OK"
+              echo "::group::$repo"
               echo "[$repo] Start"
               if ! sync_mirror "$config"; then
                 echo "[$repo] Failed"
@@ -193,6 +193,7 @@ jobs:
               rm -rf repo-dir remote-src remote-dist
               end_time=$(date +%s.%N)
               echo "[$repo] Done ($status) ($CURRENT/$TOTAL_COUNT) ($(echo "$end_time - $start_time" | bc) sec)"
+              echo "::endgroup::"
             )
             # )&
           done
