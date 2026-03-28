@@ -34,9 +34,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
-      - run: |
-          git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
-          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
+      - run: df -h
 
       - name: Sync
         env:
@@ -44,6 +42,8 @@ jobs:
         run: |
           # set -x
 
+          git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
+          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
           # not required
           git config --global init.defaultBranch main
 
@@ -57,10 +57,6 @@ jobs:
           for ((i=0; i<MAX_JOBS; i++)); do
             echo >&3
           done
-
-          echo "===== 'df -h' ====="
-          df -h
-          echo "==================="
 
           sudo mkdir /mnt/sync
           sudo touch /mnt/failed-repos
@@ -88,8 +84,9 @@ jobs:
             fi
 
             echo "[$repo] Compare remotes"
-            git ls-remote --quiet --heads --tags "$url" > remote-src
-            git ls-remote --quiet --heads --tags "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo" > remote-dist
+            git ls-remote --quiet --heads --tags "$url" > remote-src &
+            git ls-remote --quiet --heads --tags "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo" > remote-dist &
+            wait
             set +e
             diff remote-src remote-dist > /dev/null
             ret="$?"
@@ -113,12 +110,12 @@ jobs:
             git config set --append remote.mirror.fetch '+refs/tags/*:refs/tags/*'
 
             if [ "$first" -eq 0 ]; then
-              git fetch mirror --filter=blob:none &> /dev/null
-              git fetch origin &> /dev/null
+              git fetch --quiet mirror --filter=blob:none
+              git fetch --quiet --prune origin
               ret="$?"
             else
               echo "[$repo] First time sync. full cloning"
-              git fetch origin &> /dev/null
+              git fetch --quiet origin
               ret="$?"
             fi
 
@@ -128,8 +125,8 @@ jobs:
             fi
 
             echo "[$repo] Pushing to mirror repo"
-            git push --mirror mirror &> /dev/null
-            gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( git remote show origin | grep "^  HEAD branch: " | cut -c 16- )"
+            git push --quiet --mirror mirror
+            gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( | grep "^  HEAD branch: " ../remote-src | cut -c 16- )"
           }
 
           curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | shuf | \
@@ -169,4 +166,5 @@ jobs:
           rm "$tmp_fifo"
 
       - name: List failed repos
+        if: always()
         run: cat /mnt/failed-repos
