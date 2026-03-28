@@ -233,7 +233,7 @@ jobs:
               echo "::group::$repo"
               log "Start"
               if grep -xF "/$repo" "$REPO_DIR/skip.list"; then
-                log "Done (Skip) ($CURRENT/$TOTAL_COUNT)
+                log "Done (Skip) ($CURRENT/$TOTAL_COUNT)"
                 echo >&3
                 exit
               fi
