@@ -168,54 +168,57 @@ jobs:
             set -e
             if [ "$ret" -ne 0 ]; then
               log "Failed to push, fallback"
-              COMMIT_REVS=($(git rev-list --reverse HEAD))
-              TOTAL=${#COMMIT_REVS[@]}
-              CURRENT_BRANCH=$(git branch --show-current)
+              BRANCHES=$(git for-each-ref --format='%(refname:short)' refs/heads/)
+              for CURRENT_BRANCH in $BRANCHES; do
+                log "=== Processing branch: $CURRENT_BRANCH ==="
+                COMMIT_REVS=($(git rev-list --reverse CURRENT_BRANCH))
+                TOTAL=${#COMMIT_REVS[@]}
 
-              MAX_BATCH=100000
-              MIN_BATCH=1
-              BATCH=10000
-              STEP=2000
-              INDEX=0
+                MAX_BATCH=100000
+                MIN_BATCH=1
+                BATCH=10000
+                STEP=2000
+                INDEX=0
 
-              log "Total: $TOTAL commits."
+                log "Total: $TOTAL commits."
 
-              while [ $INDEX -lt $TOTAL ]; do
-                REMAINING=$((TOTAL - INDEX))
-                [ $BATCH -gt $REMAINING ] && CURRENT_TRY=$REMAINING || CURRENT_TRY=$BATCH
+                while [ $INDEX -lt $TOTAL ]; do
+                  REMAINING=$((TOTAL - INDEX))
+                  [ $BATCH -gt $REMAINING ] && CURRENT_TRY=$REMAINING || CURRENT_TRY=$BATCH
 
-                TARGET_REV=${COMMIT_REVS[$((INDEX + CURRENT_TRY - 1))]}
+                  TARGET_REV=${COMMIT_REVS[$((INDEX + CURRENT_TRY - 1))]}
 
-                log "--- Attempting: $CURRENT_TRY commits (Total Progress: $((INDEX + CURRENT_TRY))/$TOTAL) ---"
+                  log "--- Attempting: $CURRENT_TRY commits (Total Progress: $((INDEX + CURRENT_TRY))/$TOTAL) ---"
 
-                if git push mirror "$TARGET_REV:refs/heads/$CURRENT_BRANCH"; then
-                  log ">> Success."
-                  INDEX=$((INDEX + CURRENT_TRY))
-                  BATCH=$((BATCH + STEP))
-                  [ $BATCH -gt $MAX_BATCH ] && BATCH=$MAX_BATCH
-                  log ">> Increasing batch size to $BATCH for next step."
-                else
-                  log ">> Failed! Reducing batch size..."
-
-                  if [ $BATCH -gt $CURRENT_TRY ]; then
-                    BATCH=$CURRENT_TRY
+                  if git push mirror "$TARGET_REV:refs/heads/$CURRENT_BRANCH"; then
+                    log ">> Success."
+                    INDEX=$((INDEX + CURRENT_TRY))
+                    BATCH=$((BATCH + STEP))
+                    [ $BATCH -gt $MAX_BATCH ] && BATCH=$MAX_BATCH
+                    log ">> Increasing batch size to $BATCH for next step."
                   else
-                    if [ $BATCH -le 3 ]; then
-                      BATCH=$((BATCH - 1))
-                    else
-                      BATCH=$((BATCH / 2))
-                    fi
-                  fi
+                    log ">> Failed! Reducing batch size..."
 
-                  if [ $BATCH -lt $MIN_BATCH ]; then
-                    if [ $CURRENT_TRY -eq 1 ]; then
-                      log "Fatal: Single commit push failed. Check for large files or remote limits."
-                      return 1
+                    if [ $BATCH -gt $CURRENT_TRY ]; then
+                      BATCH=$CURRENT_TRY
+                    else
+                      if [ $BATCH -le 3 ]; then
+                        BATCH=$((BATCH - 1))
+                      else
+                        BATCH=$((BATCH / 2))
+                      fi
                     fi
-                    BATCH=$MIN_BATCH
+
+                    if [ $BATCH -lt $MIN_BATCH ]; then
+                      if [ $CURRENT_TRY -eq 1 ]; then
+                        log "Fatal: Single commit push failed. Check for large files or remote limits."
+                        return 1
+                      fi
+                      BATCH=$MIN_BATCH
+                    fi
+                    log ">> Retrying with smaller batch: $BATCH"
                   fi
-                  log ">> Retrying with smaller batch: $BATCH"
-                fi
+                done
               done
               git push mirror --mirror
             fi
