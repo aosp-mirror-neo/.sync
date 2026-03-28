@@ -41,8 +41,8 @@ jobs:
       fail-fast: false
       matrix:
         chunk: ${{ fromJson(needs.prepare_matrix.outputs.chunks) }}
-    outputs:
-      failed: ${{ steps.matrix-output.outputs.json }}
+    # outputs:
+    #   failed: ${{ steps.matrix-output.outputs.json }}
     steps:
       - uses: actions/checkout@v6
 
@@ -164,7 +164,7 @@ jobs:
             git push --quiet --mirror mirror
             ret="$?"
             set -e
-            if [ "$ret" -eq 0 ]; then
+            if [ "$ret" -ne 0 ]; then
               log "Failed to push, fallback"
               COMMIT_REVS=$(git rev-list --reverse HEAD)
               COUNT=0
