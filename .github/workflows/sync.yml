@@ -29,7 +29,7 @@ jobs:
       - name: Split
         id: split
         run: |
-          PARALLEL=10
+          PARALLEL=17
           MATRIX=$(curl -s "https://android.googlesource.com/?format=JSON" | tail -n +2 | jq -c '.[]' | shuf | \
                     split -n l/$PARALLEL --filter='jq -Rs .' | jq -sc .)
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
@@ -76,6 +76,8 @@ jobs:
           CHUNK_DATA: ${{ matrix.chunk }}
         run: |
           # set -x
+
+          REPO_DIR="$(pwd)"
 
           git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
           git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
@@ -166,18 +168,47 @@ jobs:
             set -e
             if [ "$ret" -ne 0 ]; then
               log "Failed to push, fallback"
-              COMMIT_REVS=$(git rev-list --reverse HEAD)
-              COUNT=0
-              BATCH=60000
-
-              for REV in $COMMIT_REVS; do
-                  COUNT=$((COUNT + 1))
-                  if [ $((COUNT % BATCH)) -eq 0 ]; then
-                      echo "Pushing up to commit $COUNT..."
-                      git push mirror $REV:refs/heads/$(git branch --show-current)
+              COMMIT_REVS=($(git rev-list --reverse HEAD))
+              TOTAL=${#COMMIT_REVS[@]}
+              CURRENT_BRANCH=$(git branch --show-current)
+              
+              MAX_BATCH=100000
+              MIN_BATCH=1
+              BATCH=10000
+              STEP=2000
+              INDEX=0
+              
+              log "Total: $TOTAL commits."
+              
+              while [ $INDEX -lt $TOTAL ]; do
+                REMAINING=$((TOTAL - INDEX))
+                [ $BATCH -gt $REMAINING ] && CURRENT_TRY=$REMAINING || CURRENT_TRY=$BATCH
+                
+                TARGET_REV=${COMMIT_REVS[$((INDEX + CURRENT_TRY - 1))]}
+                
+                log "--- Attempting: $CURRENT_TRY commits (Total Progress: $((INDEX + CURRENT_TRY))/$TOTAL) ---"
+            
+                if git push mirror "$TARGET_REV:refs/heads/$CURRENT_BRANCH"; then
+                  log ">> Success."
+                  INDEX=$((INDEX + CURRENT_TRY))
+                  BATCH=$((BATCH + STEP))
+                  [ $BATCH -gt $MAX_BATCH ] && BATCH=$MAX_BATCH
+                  log ">> Increasing batch size to $BATCH for next step."
+                else
+                  log ">> Failed! Reducing batch size..."
+                  
+                  BATCH=$((BATCH / 2))
+                  
+                  if [ $BATCH -lt $MIN_BATCH ]; then
+                    if [ $CURRENT_TRY -eq 1 ]; then
+                      log "Fatal: Single commit push failed. Check for large files or remote limits."
+                      exit 1
+                    fi
+                    BATCH=$MIN_BATCH
                   fi
+                  log ">> Retrying with smaller batch: $BATCH"
+                fi
               done
-
               git push mirror --mirror
             fi
 
@@ -202,6 +233,11 @@ jobs:
               status="OK"
               echo "::group::$repo"
               log "Start"
+              if grep -xF "/$repo" "$REPO_DIR/skip.list"; then
+                log "Done (Skip) ($CURRENT/$TOTAL_COUNT)
+                echo >&3
+                exit
+              fi
               if ! sync_mirror "$config"; then
                 log "Failed"
                 echo "$repo" >> /mnt/failed-repos
