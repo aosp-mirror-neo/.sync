@@ -1,0 +1,8 @@
+/platform_prebuilts_eclipse-build-deps
+/platform_external_angle
+/platform_prebuilts_jdk_jdk25
+/platform_system_core
+/platform_external_eclipse-basebuilder
+/toolchain_prebuilts_ndk-darwin_r23
+/platform_prebuilts_clang_host_linux-arm64
+/platform_external_libabigail
