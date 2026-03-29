@@ -200,9 +200,9 @@ jobs:
                 MIRROR_TIP=$(grep "refs/heads/$CURRENT_BRANCH$" ../remote-dist | awk '{print $1}')
 
                 if [ -n "$MIRROR_TIP" ]; then
-                  COMMIT_REVS=($(git rev-list --reverse --ancestry-path "${MIRROR_TIP}..${CURRENT_BRANCH}"))
+                  COMMIT_REVS=($(git rev-list --reverse --ancestry-path "${MIRROR_TIP}..refs/heads/${CURRENT_BRANCH}"))
                 else
-                  COMMIT_REVS=($(git rev-list --reverse "$CURRENT_BRANCH"))
+                  COMMIT_REVS=($(git rev-list --reverse "refs/heads/$CURRENT_BRANCH"))
                 fi
 
                 TOTAL=${#COMMIT_REVS[@]}
