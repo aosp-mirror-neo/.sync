@@ -83,3 +83,29 @@ remote: error: File samples/PictureInPicture/ComposePip/app/src/main/res/raw/sam
 /platform_prebuilts_clang-tools
 /kernel_prebuilts_6.12_arm64
 /platform_tools_external_gradle
+/device_lge_hammerhead-kernel
+/platform_prebuilts_fuchsia_sdk
+/platform_external_qt
+
+/platform_external_chromium_org_third_party_eyesfree_src_android_java_src_com_googlecode_eyesfree_braille
+2026-03-29T05:40:57.4016444Z ##[group]platform_external_chromium_org_third_party_eyesfree_src_android_java_src_com_googlecode_eyesfree_braille
+2026-03-29T05:40:57.4017797Z Start
+2026-03-29T05:40:57.4134203Z Check if the mirror repository is created
+2026-03-29T05:40:57.5728800Z curl: (22) The requested URL returned error: 404
+2026-03-29T05:40:57.5753525Z Creating target repo
+2026-03-29T05:40:57.8728829Z GraphQL: Name cannot be more than 100 characters (createRepository)
+2026-03-29T05:40:57.8747641Z Compare remotes
+2026-03-29T05:40:57.9570834Z remote: Repository not found.
+2026-03-29T05:40:57.9572769Z fatal: repository 'https://github.com/aosp-mirror-neo/platform_external_chromium_org_third_party_eyesfree_src_android_java_src_com_googlecode_eyesfree_braille/' not found
+
+/platform_prebuilts_clang_host_windows-x86
+/platform_packages_modules_Connectivity
+/platform_tools_base
+/kernel_prebuilts_6.1_x86-64
+/platform_prebuilts_android-emulator-build_common
+/platform_prebuilts_androidx_konan
+/toolchain_prebuilts_ndk-darwin_r27
+/trusty_prebuilts_aosp
+/platform_prebuilts_runtime
+/platform_tools_gpu
+/platform_packages_services_Car
