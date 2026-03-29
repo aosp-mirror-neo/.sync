@@ -215,7 +215,6 @@ jobs:
                 MAX_BATCH=100000
                 MIN_BATCH=1
                 BATCH=$TOTAL
-                STEP=2000
                 INDEX=0
 
                 log "Total new commits: $TOTAL (mirror tip: ${MIRROR_TIP:-none})"
@@ -232,7 +231,7 @@ jobs:
                   if git push mirror "$TARGET_REV:refs/heads/$CURRENT_BRANCH"; then
                     log ">> Success."
                     INDEX=$((INDEX + CURRENT_TRY))
-                    BATCH=$((BATCH + STEP))
+                    # BATCH=$((BATCH * 12 / 10 + 10))
                     [ $BATCH -gt $MAX_BATCH ] && BATCH=$MAX_BATCH
                     log ">> Increasing batch size to $BATCH for next step."
                   else
