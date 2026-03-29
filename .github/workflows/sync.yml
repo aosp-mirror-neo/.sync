@@ -207,6 +207,7 @@ jobs:
                 log "Total: $TOTAL commits."
 
                 while [ $INDEX -lt $TOTAL ]; do
+                  check_and_refresh_token
                   REMAINING=$((TOTAL - INDEX))
                   [ $BATCH -gt $REMAINING ] && CURRENT_TRY=$REMAINING || CURRENT_TRY=$BATCH
 
