@@ -197,7 +197,7 @@ jobs:
               log "Fetching from mirror"
               git fetch --quiet mirror --filter=blob:none
               log "Fetching from origin"
-              git fetch --quiet origin
+              git fetch --quiet --prune --prune-tags origin
             else
               log "First time sync. full cloning"
               git fetch --quiet origin
@@ -210,7 +210,7 @@ jobs:
             set -e
             if [ "$ret" -ne 0 ]; then
               log "Failed to push, fallback"
-              BRANCHES=$(git for-each-ref --format='%(refname:short)' refs/heads/)
+              BRANCHES=$(git for-each-ref --format='%(refname:lstrip=2)' refs/heads/)
               for CURRENT_BRANCH in $BRANCHES; do
                 log "=== Processing branch: $CURRENT_BRANCH ==="
                 COMMIT_REVS=($(git rev-list --reverse $CURRENT_BRANCH))
