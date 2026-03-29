@@ -193,10 +193,24 @@ jobs:
             if [ "$ret" -ne 0 ]; then
               log "Failed to push, fallback"
               BRANCHES=$(git for-each-ref --format='%(refname:lstrip=2)' refs/heads/)
+
               for CURRENT_BRANCH in $BRANCHES; do
                 log "=== Processing branch: $CURRENT_BRANCH ==="
-                COMMIT_REVS=($(git rev-list --reverse $CURRENT_BRANCH))
+
+                MIRROR_TIP=$(grep "refs/heads/$CURRENT_BRANCH$" ../remote-dist | awk '{print $1}')
+
+                if [ -n "$MIRROR_TIP" ]; then
+                  COMMIT_REVS=($(git rev-list --reverse --ancestry-path "${MIRROR_TIP}..${CURRENT_BRANCH}"))
+                else
+                  COMMIT_REVS=($(git rev-list --reverse "$CURRENT_BRANCH"))
+                fi
+
                 TOTAL=${#COMMIT_REVS[@]}
+
+                if [ "$TOTAL" -eq 0 ]; then
+                  log "Already up-to-date. skip"
+                  continue
+                fi
 
                 MAX_BATCH=100000
                 MIN_BATCH=1
@@ -204,7 +218,7 @@ jobs:
                 STEP=2000
                 INDEX=0
 
-                log "Total: $TOTAL commits."
+                log "Total new commits: $TOTAL (mirror tip: ${MIRROR_TIP:-none})"
 
                 while [ $INDEX -lt $TOTAL ]; do
                   check_and_refresh_token
