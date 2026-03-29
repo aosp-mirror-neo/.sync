@@ -33,10 +33,6 @@
 /platform_development
 remote: error: File samples/PictureInPicture/ComposePip/app/src/main/res/raw/samplevideo.mp4 is 150.69 MB; this exceeds GitHub's file size limit of 100.00 MB
 
-/platform_external_vulkan-headers
-remote: error: GH014: Sorry, branch or tag names starting with 'refs/' are not allowed.
-2026-03-28T17:20:26.2280134Z remote: error: Invalid branch or tag name "refs/heads/upstream-master"
-
 /platform_external_adt-infra
 /platform_prebuilts_rust-toolchain_windows-x86
 
@@ -68,45 +64,6 @@ remote: error: GH014: Sorry, branch or tag names starting with 'refs/' are not a
 /platform_prebuilts_clang_linux-x86_host_3.4
 /kernel_prebuilts_mainline_arm64
 /platform_tools_dexter
-
-/device_google_tangorpro-kernel
-2026-03-28T17:17:52.6875822Z ##[group]device_google_tangorpro-kernel
-2026-03-28T17:17:52.6876450Z Start
-2026-03-28T17:17:52.6989714Z Check if the mirror repository is created
-2026-03-28T17:17:53.3352001Z Compare remotes
-2026-03-28T17:17:53.6506109Z Cloning source repo
-2026-03-28T17:17:53.6543227Z Initialized empty Git repository in /mnt/sync/device_google_tangorpro-kernel/repo-dir/
-2026-03-28T17:17:53.6671227Z Fetching from mirror
-2026-03-28T17:17:54.5648835Z Fetching from origin
-2026-03-28T17:32:07.7310463Z Pushing to mirror repo
-2026-03-28T17:36:42.5589119Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
-2026-03-28T17:36:42.5589839Z send-pack: unexpected disconnect while reading sideband packet
-2026-03-28T17:37:24.1668966Z fatal: the remote end hung up unexpectedly
-2026-03-28T17:37:24.1693397Z Failed to push, fallback
-2026-03-28T17:37:24.1753677Z === Processing branch: refs/heads/aml_ads_341826060 ===
-2026-03-28T17:37:24.1842803Z Total: 395 commits.
-2026-03-28T17:37:24.1843642Z --- Attempting: 395 commits (Total Progress: 395/395) ---
-2026-03-28T17:39:25.5964246Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
-2026-03-28T17:39:25.5967647Z send-pack: unexpected disconnect while reading sideband packet
-2026-03-28T17:39:46.2043425Z fatal: the remote end hung up unexpectedly
-2026-03-28T17:39:46.2051018Z Everything up-to-date
-2026-03-28T17:39:46.2064748Z >> Failed! Reducing batch size...
-2026-03-28T17:39:46.2065359Z >> Retrying with smaller batch: 395
-2026-03-28T17:39:46.2066032Z --- Attempting: 395 commits (Total Progress: 395/395) ---
-2026-03-28T17:41:40.3242291Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
-2026-03-28T17:41:40.3243220Z send-pack: unexpected disconnect while reading sideband packet
-2026-03-28T17:42:00.9525525Z fatal: the remote end hung up unexpectedly
-2026-03-28T17:42:00.9532654Z Everything up-to-date
-2026-03-28T17:42:00.9547411Z >> Failed! Reducing batch size...
-2026-03-28T17:42:00.9548331Z >> Retrying with smaller batch: 197
-2026-03-28T17:42:00.9549030Z --- Attempting: 197 commits (Total Progress: 197/395) ---
-2026-03-28T17:42:01.4223806Z remote: error: GH014: Sorry, branch or tag names starting with 'refs/' are not allowed.        
-2026-03-28T17:42:01.4452423Z remote: error: Invalid branch or tag name "refs/heads/aml_ads_341826060"        
-2026-03-28T17:42:01.4453085Z To https://github.com/aosp-mirror-neo/device_google_tangorpro-kernel
-2026-03-28T17:42:01.4453868Z  ! [remote rejected]       1ecad96b5ac07d55b94b2fd07e1e341c60f58afa -> refs/heads/aml_ads_341826060 (pre-receive hook declined)
-2026-03-28T17:42:01.4454731Z error: failed to push some refs to 'https://github.com/aosp-mirror-neo/device_google_tangorpro-kernel'
-2026-03-28T17:42:01.4467670Z >> Failed! Reducing batch size...
-
 /platform_packages_modules_ArtPrebuilt
 /platform_system_unwinding
 /platform_external_deqp
@@ -125,70 +82,4 @@ remote: error: GH014: Sorry, branch or tag names starting with 'refs/' are not a
 /platform_prebuilts_jdk_jdk9
 /platform_prebuilts_clang-tools
 /kernel_prebuilts_6.12_arm64
-
-/platform_frameworks_base
-2026-03-29T04:08:46.9076245Z ##[group]platform_frameworks_base
-2026-03-29T04:08:46.9076622Z Start
-2026-03-29T04:08:46.9197363Z Check if the mirror repository is created
-2026-03-29T04:08:47.3539222Z Compare remotes
-2026-03-29T04:08:47.6227134Z Cloning source repo
-2026-03-29T04:08:47.6267517Z Initialized empty Git repository in /mnt/sync/platform_frameworks_base/repo-dir/
-2026-03-29T04:08:47.6398904Z Fetching from mirror
-2026-03-29T04:08:52.3904710Z Fetching from origin
-2026-03-29T04:24:30.0905876Z Pushing to mirror repo
-2026-03-29T04:27:13.7611595Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
-2026-03-29T04:27:13.7613040Z send-pack: unexpected disconnect while reading sideband packet
-2026-03-29T04:27:46.0822206Z fatal: the remote end hung up unexpectedly
-2026-03-29T04:27:46.0849407Z Failed to push, fallback
-2026-03-29T04:27:46.1058874Z === Processing branch: refs/heads/aml_ads_341826060 ===
-2026-03-29T04:27:53.8807745Z Total: 902062 commits.
-2026-03-29T04:27:54.0258728Z --- Attempting: 10000 commits (Total Progress: 10000/902062) ---
-2026-03-29T04:27:54.7636829Z remote: error: GH014: Sorry, branch or tag names starting with 'refs/' are not allowed.        
-2026-03-29T04:27:54.7637946Z remote: error: Invalid branch or tag name "refs/heads/aml_ads_341826060"        
-2026-03-29T04:27:54.7815445Z To https://github.com/aosp-mirror-neo/platform_frameworks_base
-2026-03-29T04:27:54.7817967Z  ! [remote rejected]           7c47adefea3101876f747926e7631406b4fbf45e -> refs/heads/aml_ads_341826060 (pre-receive hook declined)
-2026-03-29T04:27:54.7820244Z error: failed to push some refs to 'https://github.com/aosp-mirror-neo/platform_frameworks_base'
-2026-03-29T04:27:54.7833491Z >> Failed! Reducing batch size...
-
-/device_google_cuttlefish_vmm
-2026-03-29T03:53:22.2322482Z ##[group]device_google_cuttlefish_vmm
-2026-03-29T03:53:22.2323088Z Start
-2026-03-29T03:53:22.2437483Z Check if the mirror repository is created
-2026-03-29T03:53:22.8097067Z Compare remotes
-2026-03-29T03:53:23.0761585Z Cloning source repo
-2026-03-29T03:53:23.0801219Z Initialized empty Git repository in /mnt/sync/device_google_cuttlefish_vmm/repo-dir/
-2026-03-29T03:53:23.0948524Z Fetching from mirror
-2026-03-29T03:53:23.5402452Z Fetching from origin
-2026-03-29T03:56:59.4789442Z Pushing to mirror repo
-2026-03-29T03:58:26.8814812Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
-2026-03-29T03:58:26.8816397Z send-pack: unexpected disconnect while reading sideband packet
-2026-03-29T03:58:43.0557634Z fatal: the remote end hung up unexpectedly
-2026-03-29T03:58:43.0583660Z Failed to push, fallback
-2026-03-29T03:58:43.0656775Z === Processing branch: refs/heads/aml_tz2_305400100 ===
-2026-03-29T03:58:43.0698784Z Total: 296 commits.
-2026-03-29T03:58:43.0714252Z --- Attempting: 296 commits (Total Progress: 296/296) ---
-2026-03-29T03:58:43.4355883Z remote: error: GH014: Sorry, branch or tag names starting with 'refs/' are not allowed.        
-2026-03-29T03:58:43.4356649Z remote: error: Invalid branch or tag name "refs/heads/aml_tz2_305400100"        
-2026-03-29T03:58:43.4702164Z To https://github.com/aosp-mirror-neo/device_google_cuttlefish_vmm
-2026-03-29T03:58:43.4703463Z  ! [remote rejected] 1b29430d1257c586c95e64c14d43be9e94a5a55f -> refs/heads/aml_tz2_305400100 (pre-receive hook declined)
-2026-03-29T03:58:43.4704906Z error: failed to push some refs to 'https://github.com/aosp-mirror-neo/device_google_cuttlefish_vmm'
-2026-03-29T03:58:43.4718321Z >> Failed! Reducing batch size...
-
-/kernel_prebuilts_5.10_arm64
-2026-03-29T04:18:48.8133822Z --- Attempting: 332 commits (Total Progress: 332/1330) ---
-2026-03-29T04:18:49.1758645Z remote: error: GH014: Sorry, branch or tag names starting with 'refs/' are not allowed.        
-2026-03-29T04:18:49.1760106Z remote: error: Invalid branch or tag name "refs/heads/aml_ads_341826060"        
-2026-03-29T04:18:49.1954579Z To https://github.com/aosp-mirror-neo/kernel_prebuilts_5.10_arm64
-2026-03-29T04:18:49.1955639Z  ! [remote rejected] 402d3e14007c58396fb3803c59229c22eb9c5550 -> refs/heads/aml_ads_341826060 (pre-receive hook declined)
-2026-03-29T04:18:49.1956692Z error: failed to push some refs to 'https://github.com/aosp-mirror-neo/kernel_prebuilts_5.10_arm64'
-
-/platform_external_chromium-webview
-2026-03-29T04:33:40.4239641Z --- Attempting: 60 commits (Total Progress: 60/973) ---
-2026-03-29T04:33:40.9502083Z remote: error: GH014: Sorry, branch or tag names starting with 'refs/' are not allowed.        
-2026-03-29T04:33:40.9504075Z remote: error: Invalid branch or tag name "refs/heads/aml_ads_341826060"        
-2026-03-29T04:33:40.9702339Z To https://github.com/aosp-mirror-neo/platform_external_chromium-webview
-2026-03-29T04:33:40.9703636Z  ! [remote rejected] 970f0c17156016813274b93729de104b21f238e1 -> refs/heads/aml_ads_341826060 (pre-receive hook declined)
-2026-03-29T04:33:40.9704715Z error: failed to push some refs to 'https://github.com/aosp-mirror-neo/platform_external_chromium-webview'
-2026-03-29T04:33:40.9715314Z >> Failed! Reducing batch size...
-
 /platform_tools_external_gradle
