@@ -188,6 +188,7 @@ jobs:
             git config unset --all remote.origin.fetch
             git config unset --all remote.mirror.fetch
             git config set --append remote.origin.fetch '+refs/heads/*:refs/heads/*'
+            git config set --append remote.origin.fetch "^refs/heads/refs/*"
             git config set --append remote.mirror.fetch '+refs/heads/*:refs/heads/*'
             git config set --append remote.origin.fetch '+refs/tags/*:refs/tags/*'
             git config set --append remote.mirror.fetch '+refs/tags/*:refs/tags/*'
