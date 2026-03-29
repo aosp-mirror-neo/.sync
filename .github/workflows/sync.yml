@@ -200,7 +200,7 @@ jobs:
 
                 MAX_BATCH=100000
                 MIN_BATCH=1
-                BATCH=10000
+                BATCH=$TOTAL
                 STEP=2000
                 INDEX=0
 
