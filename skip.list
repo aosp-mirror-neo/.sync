@@ -29,27 +29,10 @@
 /platform_prebuilts_androidx_external
 /device_google_crosshatch-kernel
 /kernel_prebuilts_6.1_arm64
-
 /platform_development
-remote: error: File samples/PictureInPicture/ComposePip/app/src/main/res/raw/samplevideo.mp4 is 150.69 MB; this exceeds GitHub's file size limit of 100.00 MB
-
 /platform_external_adt-infra
 /platform_prebuilts_rust-toolchain_windows-x86
-
 /platform_prebuilts_tools
-  Start
-  Check if the mirror repository is created
-  Compare remotes
-  Cloning source repo
-  Initialized empty Git repository in /mnt/sync/platform_prebuilts_tools/repo-dir/
-  Fetching from mirror
-  Fetching from origin
-  fatal: write error: No space left on device
-  fatal: fetch-pack: invalid index-pack output
-  Pushing to mirror repo
-  No refs in common and none specified; doing nothing.
-  Perhaps you should specify a branch.
-
 /toolchain_prebuilts_ndk_r24
 /platform_prebuilts_android-emulator-build_qt
 /platform_media_cts
@@ -67,15 +50,7 @@ remote: error: File samples/PictureInPicture/ComposePip/app/src/main/res/raw/sam
 /platform_packages_modules_ArtPrebuilt
 /platform_system_unwinding
 /platform_external_deqp
-
 /platform_frameworks_support
-2026-03-29T03:11:34.2550069Z Pushing to mirror repo
-2026-03-29T03:14:05.5575155Z remote: error: Trace: 20d12deeb64ca204314016347fb822388870655362d7c836bcb7dc670d9e8d17        
-2026-03-29T03:14:05.5575913Z remote: error: See https://gh.io/lfs for more information.        
-2026-03-29T03:14:05.5576688Z remote: error: File camera/gradle/wrapper/gradle-4.6-all.zip is 101.78 MB; this exceeds GitHub's file size limit of 100.00 MB        
-2026-03-29T03:14:05.5577634Z remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
-2026-03-29T03:14:05.9229183Z To https://github.com/aosp-mirror-neo/platform_frameworks_support
-
 /platform_prebuilts_rust-toolchain_linux-x86
 /device_google_bonito-kernel
 /platform_prebuilts_rust-toolchain_linux-musl-x86
@@ -114,21 +89,7 @@ remote: error: File samples/PictureInPicture/ComposePip/app/src/main/res/raw/sam
 /platform_prebuilts_jdk_jdk17
 /device_google_cuttlefish_vmm
 /platform_prebuilts_remoteexecution-client
-
 /platform_cts
-  remote: warning: File tests/tests/media/res/raw/MultiLangPerso_1PID_PC0_Select_AC4_H265_DVB_50fps.trp is 67.11 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
-  remote: warning: File tests/tests/media/res/raw/MultiLangPerso_1PID_PC0_Select_AC4_H265_DVB_50fps.trp is 67.11 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
-  remote: error: Trace: 19f32a1c257e2b244ea87c222507e26e7e148fe8aab59c192db6d8cab5ec3d0c        
-  remote: error: Trace: 19f32a1c257e2b244ea87c222507e26e7e148fe8aab59c192db6d8cab5ec3d0c        
-  remote: error: See https://gh.io/lfs for more information.        
-  remote: error: See https://gh.io/lfs for more information.        
-  remote: error: File hostsidetests/largeapk/app/res/raw/zerofile.png is 200.00 MB; this exceeds GitHub's file size limit of 100.00 MB        
-  remote: error: File hostsidetests/largeapk/app/res/raw/zerofile.png is 200.00 MB; this exceeds GitHub's file size limit of 100.00 MB        
-  remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
-  remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
-  To https://github.com/aosp-mirror-neo/platform_cts
-  To https://github.com/aosp-mirror-neo/platform_cts
-   ! [remote rejected]         2c23d0cb0ba91faa713d08b3b2e0934315a867c0 -> aml_ads_341826060 (pre-receive hook declined)
-   ! [remote rejected]         2c23d0cb0ba91faa713d08b3b2e0934315a867c0 -> aml_ads_341826060 (pre-receive hook declined)
-  error: failed to push some refs to 'https://github.com/aosp-mirror-neo/platform_cts'
-  error: failed to push some refs to 'https://github.com/aosp-mirror-neo/platform_cts'
+/device_google_cuttlefish_kernel
+/toolchain_prebuilts_ndk_r25
+/platform_prebuilt
