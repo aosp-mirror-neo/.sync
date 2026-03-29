@@ -1,61 +1,171 @@
-#!/bin/bash
-# based on
-# https://zenn.dev/coconala/articles/ee36ed7219a2ae
+#!/usr/bin/env bash
 
-set -eo pipefail
+set -euo pipefail
 
-PRIVATE_KEY="$PRIVATE_KEY"
+GITHUB_APP_ID="$APP_ID"
+GITHUB_APP_PRIVATE_KEY="$PRIVATE_KEY"
+GITHUB_INSTALLATION_ID="$INSTALLATION_ID"
 
-now=$(date +%s)
-iat=$((now - 60))
-exp=$((now + 600))
+GITHUB_API_URL="${GITHUB_API_URL:-https://api.github.com}"
+
+if [[ -z "${GITHUB_APP_ID:-}" ]]; then
+  echo "ERROR: GITHUB_APP_ID is not set" >&2
+  exit 1
+fi
+
+if [[ -z "${GITHUB_APP_PRIVATE_KEY:-}" ]]; then
+  echo "ERROR: GITHUB_APP_PRIVATE_KEY is not set" >&2
+  exit 1
+fi
+
+if ! echo "${GITHUB_APP_PRIVATE_KEY}" | grep -q "BEGIN.*PRIVATE KEY"; then
+  echo "ERROR: GITHUB_APP_PRIVATE_KEY is not in PEM format" >&2
+  exit 1
+fi
 
 base64url_encode() {
-    openssl base64 | tr -d '=' | tr '/+' '_-' | tr -d '\n'
+  openssl base64 -A | tr '+/' '-_' | tr -d '='
 }
 
-create_header() {
-    local header_json='{
-        "typ": "JWT",
-        "alg": "RS256"
-    }'
-
-    echo -n "$header_json" | base64url_encode
+json_get() {
+  local key="$1"
+  local json="$2"
+  echo "${json}" | grep -o "\"${key}\"[[:space:]]*:[[:space:]]*[^,}]*" \
+    | sed 's/.*:[[:space:]]*//' \
+    | tr -d '"' \
+    | tr -d ' '
 }
 
-create_payload() {
-    local payload_json="{
-        \"iat\": ${iat},
-        \"exp\": ${exp},
-        \"iss\": \"${APP_ID}\"
-    }"
+generate_jwt() {
+  local app_id="$1"
+  local private_key="$2"
 
-    echo -n "$payload_json" | base64url_encode
+  local header
+  header=$(printf '{"alg":"RS256","typ":"JWT"}' | base64url_encode)
+
+  local now
+  now=$(date +%s)
+  local iat=$(( now - 60 ))
+  local exp=$(( iat + 600 ))
+
+  local payload
+  payload=$(printf '{"iat":%d,"exp":%d,"iss":"%s"}' "${iat}" "${exp}" "${app_id}" \
+    | base64url_encode)
+
+  local signing_input="${header}.${payload}"
+
+  local tmp_key
+  tmp_key=$(mktemp)
+  trap "rm -f '${tmp_key}'" EXIT
+
+  echo "${private_key}" > "${tmp_key}"
+  chmod 600 "${tmp_key}"
+
+  local signature
+  signature=$(printf '%s' "${signing_input}" \
+    | openssl dgst -sha256 -sign "${tmp_key}" \
+    | base64url_encode)
+
+  rm -f "${tmp_key}"
+  trap - EXIT
+
+  echo "${signing_input}.${signature}"
 }
 
-sign_payload_with_key() {
-    local header_payload="$1"
-    echo -n "$header_payload" | openssl dgst -sha256 -sign <(printf "%b" "$PRIVATE_KEY") | base64url_encode
+get_installation_id() {
+  local jwt="$1"
+
+  local response
+  response=$(curl -sf \
+    -H "Authorization: Bearer ${jwt}" \
+    -H "Accept: application/vnd.github+json" \
+    -H "X-GitHub-Api-Version: 2022-11-28" \
+    "${GITHUB_API_URL}/app/installations")
+
+  if [[ -z "${response}" ]]; then
+    echo "ERROR: Failed to get installation list" >&2
+    exit 1
+  fi
+
+  local installation_id
+  installation_id=$(echo "${response}" \
+    | grep -o '"id":[[:space:]]*[0-9]*' \
+    | head -1 \
+    | grep -o '[0-9]*')
+
+  if [[ -z "${installation_id}" ]]; then
+    echo "ERROR: Installation ID not found. Check if the app is installed somewhere" >&2
+    exit 1
+  fi
+
+  echo "${installation_id}"
 }
 
-get_github_token() {
-    local jwt="$1"
-    response=$(curl --request POST \
-        --url "https://api.github.com/app/installations/${INSTALLATION_ID}/access_tokens" \
-        --header "Accept: application/vnd.github+json" \
-        --header "Authorization: Bearer ${jwt}" \
-        --header "X-GitHub-Api-Version: 2022-11-28" \
-        --silent)
+get_installation_token() {
+  local jwt="$1"
+  local installation_id="$2"
 
-    echo "${response}"
+  local response
+  response=$(curl -sf \
+    -X POST \
+    -H "Authorization: Bearer ${jwt}" \
+    -H "Accept: application/vnd.github+json" \
+    -H "X-GitHub-Api-Version: 2022-11-28" \
+    "${GITHUB_API_URL}/app/installations/${installation_id}/access_tokens")
+
+  if [[ -z "${response}" ]]; then
+    echo "ERROR: Failed to get Installation Access Token (installation_id=${installation_id})" >&2
+    exit 1
+  fi
+
+  local token
+  token=$(json_get "token" "${response}")
+
+  if [[ -z "${token}" ]]; then
+    echo "ERROR: Could not get token from response: ${response}" >&2
+    exit 1
+  fi
+
+  local expires_at
+  expires_at=$(json_get "expires_at" "${response}")
+
+  echo "token=${token}"
+  echo "expires_at=${expires_at}"
 }
 
-header=$(create_header)
-payload=$(create_payload)
-signature=$(sign_payload_with_key "${header}.${payload}")
-jwt="${header}.${payload}.${signature}"
+main() {
+  echo "==> Generating JWT..." >&2
+  local jwt
+  jwt=$(generate_jwt "${GITHUB_APP_ID}" "${GITHUB_APP_PRIVATE_KEY}")
 
-response=$(get_github_token "${jwt}")
-token=$(echo "${response}" | jq -r '.token')
+  local installation_id
+  if [[ -n "${GITHUB_INSTALLATION_ID:-}" ]]; then
+    installation_id="${GITHUB_INSTALLATION_ID}"
+    echo "==> Installation ID (from env): ${installation_id}" >&2
+  else
+    echo "==> Installation ID (API)" >&2
+    installation_id=$(get_installation_id "${jwt}")
+    echo "==> Installation ID: ${installation_id}" >&2
+  fi
 
-echo "${token}"
+  echo "==> Fetching Installation Access Token" >&2
+  local result
+  result=$(get_installation_token "${jwt}" "${installation_id}")
+
+  local token expires_at
+  token=$(echo "${result}"     | grep '^token='      | cut -d= -f2-)
+  expires_at=$(echo "${result}" | grep '^expires_at=' | cut -d= -f2-)
+
+  echo "" >&2
+  echo "========================================" >&2
+  echo " GitHub App Installation Access Token" >&2
+  echo "========================================" >&2
+  echo "TOKEN      : ${token}" >&2
+  echo "EXPIRES_AT : ${expires_at}" >&2
+  echo "========================================" >&2
+  echo "" >&2
+
+  echo "${token}"
+}
+
+main "$@"
