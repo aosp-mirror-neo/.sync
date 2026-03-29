@@ -74,17 +74,19 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           CHUNK_DATA: ${{ matrix.chunk }}
+          APP_ID: ${{ secrets.APP_ID }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         run: |
           # set -x
 
           REPO_DIR="$(pwd)"
+          MAX_JOBS=15
+          LAST_UPDATE=$(date +%s)
 
           git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
           git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
           # not required
           git config --global init.defaultBranch main
-
-          MAX_JOBS=15
 
           tmp_fifo=$(mktemp -u)
           mkfifo "$tmp_fifo"
@@ -98,6 +100,17 @@ jobs:
           sudo mkdir /mnt/sync
           sudo touch /mnt/failed-repos
           sudo chown runner:runner -R /mnt/sync /mnt/failed-repos
+
+          function check_and_refresh_token() {
+            local now=$(date +%s)
+            if (( now - LAST_UPDATE > 3000 )); then
+              echo "--- Token expired or near expiry. Refreshing... ---"
+              export GH_TOKEN=$(gh auth token --app-id "$APP_ID" --private-key "$PRIVATE_KEY")
+              git config --global http.https://github.com "AUTHORIZATION: basic $(echo -n "x-access-token:$GH_TOKEN" | base64)"
+              LAST_UPDATE=$now
+              echo "--- Token refreshed. ---"
+            fi
+          }
 
           function log() {
             # echo "[$repo]" "${@}"
@@ -127,7 +140,7 @@ jobs:
 
             log "Compare remotes"
             git ls-remote --quiet --heads --tags "$url" > remote-src &
-            git ls-remote --quiet --heads --tags "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo" > remote-dist &
+            git ls-remote --quiet --heads --tags "https://github.com/aosp-mirror-neo/$repo" > remote-dist &
             wait
             set +e
             diff remote-src remote-dist > /dev/null
@@ -142,7 +155,7 @@ jobs:
             mkdir repo-dir && cd repo-dir
             git init --bare
             git remote add --mirror=fetch origin "$url"
-            git remote add mirror "https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/aosp-mirror-neo/$repo"
+            git remote add mirror "https://github.com/aosp-mirror-neo/$repo"
 
             git config unset --all remote.origin.fetch
             git config unset --all remote.mirror.fetch
@@ -170,6 +183,8 @@ jobs:
               log "Failed to push, fallback"
               BRANCHES=$(git for-each-ref --format='%(refname:short)' refs/heads/)
               for CURRENT_BRANCH in $BRANCHES; do
+                # maybe nonsense
+                check_and_refresh_token
                 log "=== Processing branch: $CURRENT_BRANCH ==="
                 COMMIT_REVS=($(git rev-list --reverse $CURRENT_BRANCH))
                 TOTAL=${#COMMIT_REVS[@]}
@@ -183,6 +198,8 @@ jobs:
                 log "Total: $TOTAL commits."
 
                 while [ $INDEX -lt $TOTAL ]; do
+                  # maybe nonsense2
+                  check_and_refresh_token
                   REMAINING=$((TOTAL - INDEX))
                   [ $BATCH -gt $REMAINING ] && CURRENT_TRY=$REMAINING || CURRENT_TRY=$BATCH
 
@@ -235,6 +252,7 @@ jobs:
 
             read -u 3
             CURRENT=$((CURRENT + 1))
+            check_and_refresh_token
             export config
 
             (
