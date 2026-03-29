@@ -109,3 +109,8 @@ remote: error: File samples/PictureInPicture/ComposePip/app/src/main/res/raw/sam
 /platform_prebuilts_runtime
 /platform_tools_gpu
 /platform_packages_services_Car
+/toolchain_android_rust
+/platform_prebuilts_boot-artifacts
+/platform_prebuilts_jdk_jdk17
+/device_google_cuttlefish_vmm
+/platform_prebuilts_remoteexecution-client
