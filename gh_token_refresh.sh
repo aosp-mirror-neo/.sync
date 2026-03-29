@@ -4,9 +4,7 @@
 
 set -eo pipefail
 
-installation_id="$INSTALLATION_ID"
-client_id="$CLIENT_ID"
-pem="$PRIVATE_KEY"
+PRIVATE_KEY="$PRIVATE_KEY"
 
 now=$(date +%s)
 iat=$((now - 60))
@@ -29,7 +27,7 @@ create_payload() {
     local payload_json="{
         \"iat\": ${iat},
         \"exp\": ${exp},
-        \"iss\": \"${client_id}\"
+        \"iss\": \"${APP_ID}\"
     }"
 
     echo -n "$payload_json" | base64url_encode
@@ -37,13 +35,13 @@ create_payload() {
 
 sign_payload_with_key() {
     local header_payload="$1"
-    echo -n "$header_payload" | openssl dgst -sha256 -sign <(echo -n "$pem") | base64url_encode
+    echo -n "$header_payload" | openssl dgst -sha256 -sign <(printf "%b" "$PRIVATE_KEY") | base64url_encode
 }
 
 get_github_token() {
     local jwt="$1"
     response=$(curl --request POST \
-        --url "https://api.github.com/app/installations/${installation_id}/access_tokens" \
+        --url "https://api.github.com/app/installations/${INSTALLATION_ID}/access_tokens" \
         --header "Accept: application/vnd.github+json" \
         --header "Authorization: Bearer ${jwt}" \
         --header "X-GitHub-Api-Version: 2022-11-28" \
