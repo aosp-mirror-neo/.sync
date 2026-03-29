@@ -79,7 +79,7 @@ jobs:
           APP_ID: ${{ secrets.APP_ID }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          INSTALLATION_ID: ${{INSTALLATION_ID }}
+          INSTALLATION_ID: ${{ secrets.INSTALLATION_ID }}
         run: |
           # set -x
 
