@@ -110,3 +110,11 @@ remote: error: GH014: Sorry, branch or tag names starting with 'refs/' are not a
 /platform_packages_modules_ArtPrebuilt
 /platform_system_unwinding
 /platform_external_deqp
+
+/platform_frameworks_support
+2026-03-29T03:11:34.2550069Z Pushing to mirror repo
+2026-03-29T03:14:05.5575155Z remote: error: Trace: 20d12deeb64ca204314016347fb822388870655362d7c836bcb7dc670d9e8d17        
+2026-03-29T03:14:05.5575913Z remote: error: See https://gh.io/lfs for more information.        
+2026-03-29T03:14:05.5576688Z remote: error: File camera/gradle/wrapper/gradle-4.6-all.zip is 101.78 MB; this exceeds GitHub's file size limit of 100.00 MB        
+2026-03-29T03:14:05.5577634Z remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
+2026-03-29T03:14:05.9229183Z To https://github.com/aosp-mirror-neo/platform_frameworks_support
