@@ -259,6 +259,7 @@ jobs:
                   fi
                 done
               done
+              gh repo edit "aosp-mirror-neo/$repo" --default-branch "$( git remote show origin | grep "^  HEAD branch: " | cut -c 16- )"
               git push mirror --mirror
             fi
 
