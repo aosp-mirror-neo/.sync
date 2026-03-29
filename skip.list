@@ -114,3 +114,21 @@ remote: error: File samples/PictureInPicture/ComposePip/app/src/main/res/raw/sam
 /platform_prebuilts_jdk_jdk17
 /device_google_cuttlefish_vmm
 /platform_prebuilts_remoteexecution-client
+
+/platform_cts
+  remote: warning: File tests/tests/media/res/raw/MultiLangPerso_1PID_PC0_Select_AC4_H265_DVB_50fps.trp is 67.11 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+  remote: warning: File tests/tests/media/res/raw/MultiLangPerso_1PID_PC0_Select_AC4_H265_DVB_50fps.trp is 67.11 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+  remote: error: Trace: 19f32a1c257e2b244ea87c222507e26e7e148fe8aab59c192db6d8cab5ec3d0c        
+  remote: error: Trace: 19f32a1c257e2b244ea87c222507e26e7e148fe8aab59c192db6d8cab5ec3d0c        
+  remote: error: See https://gh.io/lfs for more information.        
+  remote: error: See https://gh.io/lfs for more information.        
+  remote: error: File hostsidetests/largeapk/app/res/raw/zerofile.png is 200.00 MB; this exceeds GitHub's file size limit of 100.00 MB        
+  remote: error: File hostsidetests/largeapk/app/res/raw/zerofile.png is 200.00 MB; this exceeds GitHub's file size limit of 100.00 MB        
+  remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
+  remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
+  To https://github.com/aosp-mirror-neo/platform_cts
+  To https://github.com/aosp-mirror-neo/platform_cts
+   ! [remote rejected]         2c23d0cb0ba91faa713d08b3b2e0934315a867c0 -> aml_ads_341826060 (pre-receive hook declined)
+   ! [remote rejected]         2c23d0cb0ba91faa713d08b3b2e0934315a867c0 -> aml_ads_341826060 (pre-receive hook declined)
+  error: failed to push some refs to 'https://github.com/aosp-mirror-neo/platform_cts'
+  error: failed to push some refs to 'https://github.com/aosp-mirror-neo/platform_cts'
