@@ -56,7 +56,7 @@ jobs:
       # - uses: jlumbroso/free-disk-space@main
       #   with:
       #     tool-cache: true
-  
+
       - uses: actions/create-github-app-token@v3
         id: app-token
         with:
@@ -78,6 +78,8 @@ jobs:
           CHUNK_DATA: ${{ matrix.chunk }}
           APP_ID: ${{ secrets.APP_ID }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          INSTALLATION_ID: ${{INSTALLATION_ID }}
         run: |
           # set -x
 
@@ -108,27 +110,7 @@ jobs:
             local now=$(date +%s)
             if (( now - LAST_UPDATE > 3000 )); then
               echo "--- Token expired or near expiry. Refreshing... ---"
-              local app_id="$APP_ID"
-              local private_key="$PRIVATE_KEY"
-              local org_name="aosp-mirror-neo"
-
-              local header=$(echo -n '{"alg":"RS256","typ":"JWT"}' | openssl base64 -e -A | tr '+/' '-_' | tr -d '=')
-              local payload=$(echo -n "{\"iat\":$(($(date +%s)-60)),\"exp\":$(($(date +%s)+600)),\"iss\":\"$app_id\"}" | openssl base64 -e -A | tr '+/' '-_' | tr -d '=')
-              local signature=$(echo -n "$header.$payload" | openssl dgst -sha256 -sign <(echo "$private_key") -binary | openssl base64 -e -A | tr '+/' '-_' | tr -d '=')
-              local jwt="$header.$payload.$signature"
-
-              local inst_id=$(curl -s -X GET \
-                -H "Authorization: Bearer $jwt" \
-                -H "Accept: application/vnd.github+json" \
-                "https://api.github.com/orgs/{org_name}/installation" \
-                | jq -r '.id')
-
-              local token=$(curl -s -X POST \
-                -H "Authorization: Bearer $jwt" \
-                -H "Accept: application/vnd.github+json" \
-                "https://api.github.com/app/installations/${inst_id}/access_tokens" \
-                | jq -r '.token')
-
+              local token=$($REPO_DIR/gh_token_refresh.sh)
               if [ "$token" = "null" ]; then
                 echo "Failed to refresh token"
                 return 1
