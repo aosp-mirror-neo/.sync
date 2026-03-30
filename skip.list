@@ -113,3 +113,175 @@
 2026-03-29T18:10:34.5211329Z error: failed to push some refs to 'https://github.com/aosp-mirror-neo/platform_frameworks_base'
 
 /platform_tools_google_prebuilts_studio_sdk_remote
+
+/device_google_cuttlefish_prebuilts
+2026-03-30T01:34:30.9032218Z ##[group]device_google_cuttlefish_prebuilts
+2026-03-30T01:34:30.9032968Z Start
+2026-03-30T01:34:30.9145718Z Check if the mirror repository is created
+2026-03-30T01:34:31.3035851Z Compare remotes
+2026-03-30T01:34:31.4876155Z Cloning source repo
+2026-03-30T01:34:31.4916203Z Initialized empty Git repository in /mnt/sync/device_google_cuttlefish_prebuilts/repo-dir/
+2026-03-30T01:34:31.5056843Z Fetching from mirror
+2026-03-30T01:34:31.9334396Z Fetching from origin
+2026-03-30T01:42:30.7996708Z Pushing to mirror repo
+2026-03-30T01:44:49.7505519Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:44:49.7506663Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:45:27.2893672Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:45:27.2917199Z Failed to push, fallback
+2026-03-30T01:45:27.2972572Z === Processing branch: aml_ads_341826060 ===
+2026-03-30T01:45:27.3027577Z Already up-to-date. skip
+2026-03-30T01:45:27.3028037Z === Processing branch: aml_ads_341826300 ===
+2026-03-30T01:45:27.3072189Z Already up-to-date. skip
+2026-03-30T01:45:27.3072641Z === Processing branch: aml_art_341810020 ===
+2026-03-30T01:45:27.3282059Z Total new commits: 1 (mirror tip: 483ccb2c7987a6d2899298707c63a02481ff7787)
+2026-03-30T01:45:27.3295644Z --- Attempting: 1 commits (Total Progress: 1/1) ---
+2026-03-30T01:46:56.8802262Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:46:56.8804555Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:46:57.7160866Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:46:57.7166679Z Everything up-to-date
+2026-03-30T01:46:57.7182253Z >> Failed! Reducing batch size...
+2026-03-30T01:46:57.7183035Z Fatal: Single commit push failed. Check for large files or remote limits.
+2026-03-30T01:46:57.7184317Z Failed
+2026-03-30T01:46:57.7230635Z Done (Failed) (39/149) (746.820704418 sec)
+2026-03-30T01:46:57.7231819Z ##[endgroup]
+
+/platform_prebuilts_android-emulator
+
+/kernel_prebuilts_5.15_arm64
+2026-03-30T02:08:57.8410950Z ##[group]kernel_prebuilts_5.15_arm64
+2026-03-30T02:08:57.8411366Z Start
+2026-03-30T02:08:57.8527286Z Check if the mirror repository is created
+2026-03-30T02:08:58.4066728Z Compare remotes
+2026-03-30T02:08:58.6421885Z Cloning source repo
+2026-03-30T02:08:58.6525806Z Initialized empty Git repository in /mnt/sync/kernel_prebuilts_5.15_arm64/repo-dir/
+2026-03-30T02:08:58.6681877Z Fetching from mirror
+2026-03-30T02:08:58.9876176Z Fetching from origin
+2026-03-30T02:17:20.3793564Z Pushing to mirror repo
+2026-03-30T02:22:05.6344223Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T02:22:05.6347671Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T02:22:34.7686643Z fatal: the remote end hung up unexpectedly
+2026-03-30T02:22:34.7711361Z Failed to push, fallback
+2026-03-30T02:22:34.7763467Z === Processing branch: aml_ads_341826060 ===
+2026-03-30T02:22:34.7862706Z Total new commits: 1 (mirror tip: 7dc40ac53ad09f285cb0409e2a2a5344eefb2e23)
+2026-03-30T02:22:34.7876617Z --- Attempting: 1 commits (Total Progress: 1/1) ---
+2026-03-30T02:25:08.6776212Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T02:25:08.6778978Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T02:25:09.6151132Z fatal: the remote end hung up unexpectedly
+2026-03-30T02:25:09.6157898Z Everything up-to-date
+2026-03-30T02:25:09.6174821Z >> Failed! Reducing batch size...
+2026-03-30T02:25:09.6176072Z Fatal: Single commit push failed. Check for large files or remote limits.
+2026-03-30T02:25:09.6176882Z Failed
+2026-03-30T02:25:09.6224964Z Done (Failed) (99/156) (971.782215469 sec)
+2026-03-30T02:25:09.6226204Z ##[endgroup]
+
+/kernel_prebuilts_5.10_x86-64
+2026-03-30T01:35:39.7401767Z ##[group]kernel_prebuilts_5.10_x86-64
+2026-03-30T01:35:39.7524358Z Start
+2026-03-30T01:35:39.7524991Z Check if the mirror repository is created
+2026-03-30T01:35:40.2928802Z Compare remotes
+2026-03-30T01:35:40.7207578Z Cloning source repo
+2026-03-30T01:35:40.7251258Z Initialized empty Git repository in /mnt/sync/kernel_prebuilts_5.10_x86-64/repo-dir/
+2026-03-30T01:35:40.7405774Z Fetching from mirror
+2026-03-30T01:35:41.4730035Z Fetching from origin
+2026-03-30T01:40:17.2682234Z Pushing to mirror repo
+2026-03-30T01:41:57.0358997Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:41:57.0360097Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:42:17.5100018Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:42:17.5127716Z Failed to push, fallback
+2026-03-30T01:42:17.5181531Z === Processing branch: aml_ads_341826060 ===
+2026-03-30T01:42:17.5231563Z Already up-to-date. skip
+2026-03-30T01:42:17.5233652Z === Processing branch: aml_ads_341826300 ===
+2026-03-30T01:42:17.5279722Z Already up-to-date. skip
+2026-03-30T01:42:17.5280563Z === Processing branch: aml_art_341810020 ===
+2026-03-30T01:42:17.5396366Z Total new commits: 33 (mirror tip: 7ae918a46efd1161411561d6c2201258fc6902df)
+2026-03-30T01:42:17.5411945Z --- Attempting: 33 commits (Total Progress: 33/33) ---
+2026-03-30T01:43:52.6395152Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:43:52.6396604Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:44:00.0896206Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:44:00.0901878Z Everything up-to-date
+2026-03-30T01:44:00.0918761Z >> Failed! Reducing batch size...
+2026-03-30T01:44:00.0919358Z >> Retrying with smaller batch: 16
+2026-03-30T01:44:00.0936037Z --- Attempting: 16 commits (Total Progress: 16/33) ---
+2026-03-30T01:44:01.1014246Z To https://github.com/aosp-mirror-neo/kernel_prebuilts_5.10_x86-64
+2026-03-30T01:44:01.1015312Z    7ae918a..399e9ca  399e9ca85619084ea675ef9f3235121e2cd18744 -> aml_art_341810020
+2026-03-30T01:44:01.1060514Z >> Success.
+2026-03-30T01:44:01.1061122Z >> Increasing batch size to 16 for next step.
+2026-03-30T01:44:01.1078001Z --- Attempting: 16 commits (Total Progress: 32/33) ---
+2026-03-30T01:44:02.2295706Z To https://github.com/aosp-mirror-neo/kernel_prebuilts_5.10_x86-64
+2026-03-30T01:44:02.2296566Z    399e9ca..c8fb6e2  c8fb6e2ac68ee0502b9f0b56e1ac5de899e1b96c -> aml_art_341810020
+2026-03-30T01:44:02.2341440Z >> Success.
+2026-03-30T01:44:02.2342051Z >> Increasing batch size to 16 for next step.
+2026-03-30T01:44:02.2358672Z --- Attempting: 1 commits (Total Progress: 33/33) ---
+2026-03-30T01:45:32.1807770Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:45:32.1810335Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:45:39.1337146Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:45:39.1343953Z Everything up-to-date
+2026-03-30T01:45:39.1360757Z >> Failed! Reducing batch size...
+2026-03-30T01:45:39.1363358Z >> Retrying with smaller batch: 1
+2026-03-30T01:45:39.1378806Z --- Attempting: 1 commits (Total Progress: 33/33) ---
+2026-03-30T01:47:10.1855774Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:47:10.1857160Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:47:17.3773076Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:47:17.3779992Z Everything up-to-date
+2026-03-30T01:47:17.3797622Z >> Failed! Reducing batch size...
+2026-03-30T01:47:17.3798922Z Fatal: Single commit push failed. Check for large files or remote limits.
+2026-03-30T01:47:17.3799707Z Failed
+2026-03-30T01:47:17.3844911Z Done (Failed) (77/154) (697.645084819 sec)
+2026-03-30T01:47:17.3861619Z ##[endgroup]
+
+/platform_external_chromium-webview
+
+/platform_prebuilts_android-emulator-build_system-images
+2026-03-30T01:35:00.6012037Z ##[group]platform_prebuilts_android-emulator-build_system-images
+2026-03-30T01:35:00.6012671Z Start
+2026-03-30T01:35:00.6128134Z Check if the mirror repository is created
+2026-03-30T01:35:01.1131381Z Compare remotes
+2026-03-30T01:35:01.3464134Z Cloning source repo
+2026-03-30T01:35:01.3503531Z Initialized empty Git repository in /mnt/sync/platform_prebuilts_android-emulator-build_system-images/repo-dir/
+2026-03-30T01:35:01.3652447Z Fetching from mirror
+2026-03-30T01:35:01.4906280Z Fetching from origin
+2026-03-30T01:49:27.4874390Z Pushing to mirror repo
+2026-03-30T01:50:00.2678073Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:50:00.2679679Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:51:59.1681311Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:51:59.1928927Z Failed to push, fallback
+2026-03-30T01:51:59.2092616Z === Processing branch: emu-33-dev ===
+2026-03-30T01:51:59.2177874Z Total new commits: 12 (mirror tip: 9486185ddc464549bcd91ffec7b51cc19f7fad91)
+2026-03-30T01:51:59.2211752Z --- Attempting: 12 commits (Total Progress: 12/12) ---
+2026-03-30T01:52:25.5077105Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:52:25.5084699Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:52:54.6969067Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:52:54.6975737Z Everything up-to-date
+2026-03-30T01:52:54.6993976Z >> Failed! Reducing batch size...
+2026-03-30T01:52:54.7000942Z >> Retrying with smaller batch: 6
+2026-03-30T01:52:54.7012186Z --- Attempting: 6 commits (Total Progress: 6/12) ---
+2026-03-30T01:53:20.1595188Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:53:20.1601098Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:53:39.0875087Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:53:39.0879554Z Everything up-to-date
+2026-03-30T01:53:39.0897239Z >> Failed! Reducing batch size...
+2026-03-30T01:53:39.0897852Z >> Retrying with smaller batch: 3
+2026-03-30T01:53:39.0914222Z --- Attempting: 3 commits (Total Progress: 3/12) ---
+2026-03-30T01:54:02.7021728Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:54:02.7025940Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:54:15.6248710Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:54:15.6251577Z Everything up-to-date
+2026-03-30T01:54:15.6265357Z >> Failed! Reducing batch size...
+2026-03-30T01:54:15.6269773Z >> Retrying with smaller batch: 2
+2026-03-30T01:54:15.6285072Z --- Attempting: 2 commits (Total Progress: 2/12) ---
+2026-03-30T01:54:39.5671763Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:54:39.5679502Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:54:52.9104906Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:54:52.9107554Z Everything up-to-date
+2026-03-30T01:54:52.9126750Z >> Failed! Reducing batch size...
+2026-03-30T01:54:52.9129754Z >> Retrying with smaller batch: 1
+2026-03-30T01:54:52.9144969Z --- Attempting: 1 commits (Total Progress: 1/12) ---
+2026-03-30T01:55:16.9384841Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T01:55:16.9388696Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T01:55:19.7314282Z fatal: the remote end hung up unexpectedly
+2026-03-30T01:55:19.7320658Z Everything up-to-date
+2026-03-30T01:55:19.7339948Z >> Failed! Reducing batch size...
+2026-03-30T01:55:19.7342802Z Fatal: Single commit push failed. Check for large files or remote limits.
+2026-03-30T01:55:19.7345833Z Failed
+2026-03-30T01:55:19.7405374Z Done (Failed) (91/152) (1219.139234819 sec)
+2026-03-30T01:55:19.7437920Z ##[endgroup]
