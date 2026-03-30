@@ -115,6 +115,7 @@ jobs:
                 echo "Failed to refresh token"
                 return 1
               fi
+              git config --global --remove-section "url.https://x-access-token:${GH_TOKEN}@github.com/" 2>/dev/null || true
               export GH_TOKEN="$token"
               git config --global url."https://x-access-token:$GH_TOKEN@github.com/".insteadOf "https://github.com/"
               LAST_UPDATE=$now
