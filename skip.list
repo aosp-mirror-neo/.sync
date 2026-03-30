@@ -285,3 +285,7 @@
 2026-03-30T01:55:19.7345833Z Failed
 2026-03-30T01:55:19.7405374Z Done (Failed) (91/152) (1219.139234819 sec)
 2026-03-30T01:55:19.7437920Z ##[endgroup]
+
+/platform_prebuilts_clang_host_darwin-x86
+/platform_tools_tradefederation_prebuilts
+
