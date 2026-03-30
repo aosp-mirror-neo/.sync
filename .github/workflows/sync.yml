@@ -232,7 +232,7 @@ jobs:
                   if git push mirror "$TARGET_REV:refs/heads/$CURRENT_BRANCH"; then
                     log ">> Success."
                     INDEX=$((INDEX + CURRENT_TRY))
-                    BATCH=$((BATCH * 12 / 10 + 10))
+                    BATCH=$((BATCH * 12 / 10 + 3))
                     [ $BATCH -gt $MAX_BATCH ] && BATCH=$MAX_BATCH
                     log ">> Increasing batch size to $BATCH for next step."
                   else
