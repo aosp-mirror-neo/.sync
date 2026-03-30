@@ -161,7 +161,7 @@ main() {
   echo " GitHub App Installation Access Token" >&2
   echo "========================================" >&2
   # echo "TOKEN      : ${token}" >&2
-  echo "TOKEN      : (success) >&2
+  echo "TOKEN      : (success)" >&2
   echo "EXPIRES_AT : ${expires_at}" >&2
   echo "========================================" >&2
   echo "" >&2
