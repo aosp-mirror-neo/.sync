@@ -93,3 +93,23 @@
 /device_google_cuttlefish_kernel
 /toolchain_prebuilts_ndk_r25
 /platform_prebuilt
+/platform_prebuilts_androidx_internal
+/device_google_wahoo-kernel
+
+/platform_frameworks_base
+2026-03-29T18:09:19.2557474Z === Processing branch: android15-automotiveos-dev ===
+2026-03-29T18:09:20.7047855Z Total new commits: 24255 (mirror tip: e92dc7bc800c8bb22f59c9650532830c1c4deeb2)
+2026-03-29T18:09:20.7090060Z --- Attempting: 24255 commits (Total Progress: 24255/24255) ---
+2026-03-29T18:10:34.2431913Z remote: error: Trace: 1799ad855b54a088a4da2f74636f4a4155fc283b4f0a6cf32ef84115953e7003        
+2026-03-29T18:10:34.2432597Z remote: error: See https://gh.io/lfs for more information.        
+2026-03-29T18:10:34.2433611Z remote: error: File packages/SettingsLib/Spa/gradle/wrapper/gradle-8.9-bin.zip is 129.81 MB; this exceeds GitHub's file size limit of 100.00 MB        
+2026-03-29T18:10:34.2434614Z remote: error: File packages/SettingsLib/Spa/gradle/wrapper/gradle-8.6-bin.zip is 126.64 MB; this exceeds GitHub's file size limit of 100.00 MB        
+2026-03-29T18:10:34.2435971Z remote: error: File packages/SettingsLib/Spa/gradle/wrapper/gradle-8.10-bin.zip is 130.38 MB; this exceeds GitHub's file size limit of 100.00 MB        
+2026-03-29T18:10:34.2436947Z remote: error: File packages/SettingsLib/Spa/gradle/wrapper/gradle-8.8-bin.zip is 131.64 MB; this exceeds GitHub's file size limit of 100.00 MB        
+2026-03-29T18:10:34.2437934Z remote: error: File packages/SettingsLib/Spa/gradle/wrapper/gradle-8.7-bin.zip is 127.97 MB; this exceeds GitHub's file size limit of 100.00 MB        
+2026-03-29T18:10:34.2438857Z remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
+2026-03-29T18:10:34.5206786Z To https://github.com/aosp-mirror-neo/platform_frameworks_base
+2026-03-29T18:10:34.5209621Z  ! [remote rejected]           57126ce975f7a74b69cce0f1b8d5ea0739c46a6f -> android15-automotiveos-dev (pre-receive hook declined)
+2026-03-29T18:10:34.5211329Z error: failed to push some refs to 'https://github.com/aosp-mirror-neo/platform_frameworks_base'
+
+/platform_tools_google_prebuilts_studio_sdk_remote
