@@ -90,6 +90,10 @@ jobs:
           git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
           git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
           git config --global url."https://x-access-token:$GH_TOKEN@github.com/".insteadOf "https://github.com/"
+          git config --global pack.packSizeLimit 100m
+          git config --global pack.window 0
+          git config --global pack.depth 0
+
           # not required
           git config --global init.defaultBranch main
 
@@ -198,42 +202,44 @@ jobs:
               for CURRENT_BRANCH in $BRANCHES; do
                 log "=== Processing branch: $CURRENT_BRANCH ==="
 
-                MIRROR_TIP=$(grep "refs/heads/$CURRENT_BRANCH$" ../remote-dist | awk '{print $1}')
-
-                if [ -n "$MIRROR_TIP" ]; then
-                  COMMIT_REVS=($(git rev-list --reverse --ancestry-path "${MIRROR_TIP}..refs/heads/${CURRENT_BRANCH}"))
-                else
-                  COMMIT_REVS=($(git rev-list --reverse "refs/heads/$CURRENT_BRANCH"))
-                fi
-
-                TOTAL=${#COMMIT_REVS[@]}
-
-                if [ "$TOTAL" -eq 0 ]; then
-                  log "Already up-to-date. skip"
-                  continue
-                fi
-
+                BATCH=100000
                 MAX_BATCH=100000
                 MIN_BATCH=1
-                BATCH=$TOTAL
-                INDEX=0
 
-                log "Total new commits: $TOTAL (mirror tip: ${MIRROR_TIP:-none})"
+                TOTAL_ORIG=$(git rev-list --count "refs/heads/$CURRENT_BRANCH")
+                PROCESSED=0
 
-                while [ $INDEX -lt $TOTAL ]; do
+                while true; do
                   check_and_refresh_token
-                  REMAINING=$((TOTAL - INDEX))
-                  [ $BATCH -gt $REMAINING ] && CURRENT_TRY=$REMAINING || CURRENT_TRY=$BATCH
 
-                  TARGET_REV=${COMMIT_REVS[$((INDEX + CURRENT_TRY - 1))]}
+                  MIRROR_TIP=$(git ls-remote mirror "refs/heads/$CURRENT_BRANCH" | awk '{print $1}')
 
-                  log "--- Attempting: $CURRENT_TRY commits (Total Progress: $((INDEX + CURRENT_TRY))/$TOTAL) ---"
+                  if [ -n "$MIRROR_TIP" ]; then
+                    mapfile -t COMMITS < <(git rev-list --reverse --ancestry-path "${MIRROR_TIP}..refs/heads/${CURRENT_BRANCH}")
+                  else
+                    mapfile -t COMMITS < <(git rev-list --reverse "refs/heads/$CURRENT_BRANCH")
+                  fi
+
+                  TOTAL=${#COMMITS[@]}
+
+                  if [ "$TOTAL" -eq 0 ]; then
+                    log "Already up-to-date. skip"
+                    break
+                  fi
+
+                  log "Total new commits: $TOTAL (mirror tip: ${MIRROR_TIP:-none})"
+
+                  CURRENT_TRY=$(( TOTAL < BATCH ? TOTAL : BATCH ))
+                  TARGET_REV=${COMMITS[$((CURRENT_TRY - 1))]}
+
+                  log "--- Attempting: $CURRENT_TRY commits (Progress (approx): $PROCESSED/$TOTAL_ORIG) ---"
 
                   if git push mirror "$TARGET_REV:refs/heads/$CURRENT_BRANCH"; then
                     log ">> Success."
-                    INDEX=$((INDEX + CURRENT_TRY))
+                    PROCESSED=$((PROCESSED + CURRENT_TRY))
                     BATCH=$((BATCH * 12 / 10 + 3))
                     [ $BATCH -gt $MAX_BATCH ] && BATCH=$MAX_BATCH
+
                     log ">> Increasing batch size to $BATCH for next step."
                   else
                     log ">> Failed! Reducing batch size..."
