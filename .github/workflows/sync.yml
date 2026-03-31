@@ -202,7 +202,7 @@ jobs:
               for CURRENT_BRANCH in $BRANCHES; do
                 log "=== Processing branch: $CURRENT_BRANCH ==="
 
-                BATCH=100000
+                BATCH=0
                 MAX_BATCH=100000
                 MIN_BATCH=1
 
@@ -229,14 +229,25 @@ jobs:
 
                   log "Total new commits: $TOTAL (mirror tip: ${MIRROR_TIP:-none})"
 
-                  CURRENT_TRY=$(( TOTAL < BATCH ? TOTAL : BATCH ))
+                  if [ "$BATCH" -eq 0 ]; then
+                    CURRENT_TRY=$TOTAL
+                  else
+                    CURRENT_TRY=$(( TOTAL < BATCH ? TOTAL : BATCH ))
+                  fi
+
                   TARGET_REV=${COMMITS[$((CURRENT_TRY - 1))]}
 
                   log "--- Attempting: $CURRENT_TRY commits (Progress (approx): $PROCESSED/$TOTAL_ORIG) ---"
 
                   if git push mirror "$TARGET_REV:refs/heads/$CURRENT_BRANCH"; then
                     log ">> Success."
+
                     PROCESSED=$((PROCESSED + CURRENT_TRY))
+
+                    if [ "$BATCH" -eq 0 ]; then
+                      BATCH=$CURRENT_TRY
+                    fi
+
                     BATCH=$((BATCH * 12 / 10 + 3))
                     [ $BATCH -gt $MAX_BATCH ] && BATCH=$MAX_BATCH
 
@@ -244,13 +255,17 @@ jobs:
                   else
                     log ">> Failed! Reducing batch size..."
 
-                    if [ $BATCH -gt $CURRENT_TRY ]; then
-                      BATCH=$CURRENT_TRY
+                    if [ "$BATCH" -eq 0 ]; then
+                      BATCH=$((CURRENT_TRY / 2))
                     else
-                      if [ $BATCH -le 3 ]; then
-                        BATCH=$((BATCH - 1))
+                      if [ $BATCH -gt $CURRENT_TRY ]; then
+                        BATCH=$CURRENT_TRY
                       else
-                        BATCH=$((BATCH / 2))
+                        if [ $BATCH -le 3 ]; then
+                          BATCH=$((BATCH - 1))
+                        else
+                          BATCH=$((BATCH / 2))
+                        fi
                       fi
                     fi
 
@@ -261,6 +276,7 @@ jobs:
                       fi
                       BATCH=$MIN_BATCH
                     fi
+
                     log ">> Retrying with smaller batch: $BATCH"
                   fi
                 done
