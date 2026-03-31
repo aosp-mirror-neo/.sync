@@ -9,7 +9,7 @@ on:
     #     required: false
     #     default: ''
   schedule:
-    - cron: '2 13 4 * *'
+    - cron: '2 13 * * *'
   push:
 
 concurrency:
