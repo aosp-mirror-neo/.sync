@@ -289,3 +289,17 @@
 /platform_prebuilts_clang_host_darwin-x86
 /platform_tools_tradefederation_prebuilts
 
+/device_google_redbull-kernel
+2026-03-30T10:48:26.2693916Z --- Attempting: 1 commits (Total Progress: 1/505) ---
+2026-03-30T10:51:22.0380930Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-30T10:51:22.0383545Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-30T10:51:42.2910531Z fatal: the remote end hung up unexpectedly
+2026-03-30T10:51:42.2919514Z Everything up-to-date
+2026-03-30T10:51:42.2938739Z >> Failed! Reducing batch size...
+2026-03-30T10:51:42.2939675Z Fatal: Single commit push failed. Check for large files or remote limits.
+2026-03-30T10:51:42.2946770Z Failed
+2026-03-30T10:51:42.3008637Z Done (Failed) (138/154) (3485.633516037 sec)
+2026-03-30T10:51:42.3020882Z ##[endgroup]
+
+/platform_prebuilts_rust
+/device_google_coral-kernel
