@@ -303,3 +303,99 @@
 
 /platform_prebuilts_rust
 /device_google_coral-kernel
+
+/device_google_bluejay-kernel
+2026-03-31T18:47:45.1073388Z ##[group]device_google_bluejay-kernel
+2026-03-31T18:47:45.1074036Z Start
+2026-03-31T18:47:45.1189614Z Check if the mirror repository is created
+2026-03-31T18:47:46.4234967Z Compare remotes
+2026-03-31T18:47:46.8200643Z Cloning source repo
+2026-03-31T18:47:46.8242510Z Initialized empty Git repository in /mnt/sync/device_google_bluejay-kernel/repo-dir/
+2026-03-31T18:47:46.8386835Z Fetching from mirror
+2026-03-31T18:47:48.9934882Z Fetching from origin
+2026-03-31T19:08:10.6927161Z Pushing to mirror repo
+2026-03-31T19:10:36.9966857Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-31T19:10:36.9968131Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-31T19:35:29.1028332Z fatal: the remote end hung up unexpectedly
+2026-03-31T19:35:29.1359203Z Failed to push, fallback
+2026-03-31T19:35:29.1876881Z === Processing branch: aml_ads_341826060 ===
+2026-03-31T19:35:29.2115419Z --- Token expired or near expiry. Refreshing... ---
+2026-03-31T19:35:29.2189778Z ==> Generating JWT...
+2026-03-31T19:35:29.2587226Z ==> Installation ID (from env): ***
+2026-03-31T19:35:29.2598773Z ==> Fetching Installation Access Token
+2026-03-31T19:35:29.4969762Z 
+2026-03-31T19:35:29.4970167Z ========================================
+2026-03-31T19:35:29.4970860Z  GitHub App Installation Access Token
+2026-03-31T19:35:29.4973898Z ========================================
+2026-03-31T19:35:29.4974374Z TOKEN      : (success)
+2026-03-31T19:35:29.4974707Z EXPIRES_AT : 29Z
+2026-03-31T19:35:29.4975010Z ========================================
+2026-03-31T19:35:29.4975308Z 
+2026-03-31T19:35:29.5024465Z --- Token refreshed. ---
+2026-03-31T19:35:29.9673783Z Total new commits: 143 (mirror tip: d2d75dd43b150ff7df995af1a7e8ae36a3d21bab)
+2026-03-31T19:35:29.9674836Z --- Attempting: 143 commits (Progress (approx): 0/1484) ---
+2026-03-31T19:38:20.4175739Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-31T19:38:20.4176828Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-31T19:51:32.0647361Z fatal: the remote end hung up unexpectedly
+2026-03-31T19:51:32.0654877Z Everything up-to-date
+2026-03-31T19:51:32.0673380Z >> Failed! Reducing batch size...
+2026-03-31T19:51:32.0673998Z >> Retrying with smaller batch: 71
+2026-03-31T19:51:32.4651751Z Total new commits: 143 (mirror tip: d2d75dd43b150ff7df995af1a7e8ae36a3d21bab)
+2026-03-31T19:51:32.4652821Z --- Attempting: 71 commits (Progress (approx): 0/1484) ---
+2026-03-31T19:53:51.5956527Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-31T19:53:51.5957456Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-31T20:00:34.7603004Z fatal: the remote end hung up unexpectedly
+2026-03-31T20:00:34.7606426Z Everything up-to-date
+2026-03-31T20:00:34.7609477Z >> Failed! Reducing batch size...
+2026-03-31T20:00:34.7615274Z >> Retrying with smaller batch: 35
+2026-03-31T20:00:35.1118495Z Total new commits: 143 (mirror tip: d2d75dd43b150ff7df995af1a7e8ae36a3d21bab)
+2026-03-31T20:00:35.1122540Z --- Attempting: 35 commits (Progress (approx): 0/1484) ---
+2026-03-31T20:02:42.7603801Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-31T20:02:42.7605076Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-31T20:05:39.4219627Z fatal: the remote end hung up unexpectedly
+2026-03-31T20:05:39.4226675Z Everything up-to-date
+2026-03-31T20:05:39.4244680Z >> Failed! Reducing batch size...
+2026-03-31T20:05:39.4245181Z >> Retrying with smaller batch: 17
+2026-03-31T20:05:39.7785232Z Total new commits: 143 (mirror tip: d2d75dd43b150ff7df995af1a7e8ae36a3d21bab)
+2026-03-31T20:05:39.7785942Z --- Attempting: 17 commits (Progress (approx): 0/1484) ---
+2026-03-31T20:07:55.7921020Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-31T20:07:55.7923560Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-31T20:09:36.2161892Z fatal: the remote end hung up unexpectedly
+2026-03-31T20:09:36.2167896Z Everything up-to-date
+2026-03-31T20:09:36.2187465Z >> Failed! Reducing batch size...
+2026-03-31T20:09:36.2188189Z >> Retrying with smaller batch: 8
+2026-03-31T20:09:36.5867821Z Total new commits: 143 (mirror tip: d2d75dd43b150ff7df995af1a7e8ae36a3d21bab)
+2026-03-31T20:09:36.5869466Z --- Attempting: 8 commits (Progress (approx): 0/1484) ---
+2026-03-31T20:11:48.8376236Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-31T20:11:48.8377408Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-31T20:13:13.2693134Z fatal: the remote end hung up unexpectedly
+2026-03-31T20:13:13.2699906Z Everything up-to-date
+2026-03-31T20:13:13.2719288Z >> Failed! Reducing batch size...
+2026-03-31T20:13:13.2720017Z >> Retrying with smaller batch: 4
+2026-03-31T20:13:13.6255825Z Total new commits: 143 (mirror tip: d2d75dd43b150ff7df995af1a7e8ae36a3d21bab)
+2026-03-31T20:13:13.6257258Z --- Attempting: 4 commits (Progress (approx): 0/1484) ---
+2026-03-31T20:15:21.7594363Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-31T20:15:21.7595507Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-31T20:16:27.0407529Z fatal: the remote end hung up unexpectedly
+2026-03-31T20:16:27.0414729Z Everything up-to-date
+2026-03-31T20:16:27.0432111Z >> Failed! Reducing batch size...
+2026-03-31T20:16:27.0432725Z >> Retrying with smaller batch: 2
+2026-03-31T20:16:27.3976992Z Total new commits: 143 (mirror tip: d2d75dd43b150ff7df995af1a7e8ae36a3d21bab)
+2026-03-31T20:16:27.3978208Z --- Attempting: 2 commits (Progress (approx): 0/1484) ---
+2026-03-31T20:18:35.3522607Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-31T20:18:35.3523802Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-31T20:19:40.9327377Z fatal: the remote end hung up unexpectedly
+2026-03-31T20:19:40.9334850Z Everything up-to-date
+2026-03-31T20:19:40.9354440Z >> Failed! Reducing batch size...
+2026-03-31T20:19:40.9355014Z >> Retrying with smaller batch: 1
+2026-03-31T20:19:41.2884775Z Total new commits: 143 (mirror tip: d2d75dd43b150ff7df995af1a7e8ae36a3d21bab)
+2026-03-31T20:19:41.2886306Z --- Attempting: 1 commits (Progress (approx): 0/1484) ---
+2026-03-31T20:21:49.3428288Z error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500
+2026-03-31T20:21:49.3429724Z send-pack: unexpected disconnect while reading sideband packet
+2026-03-31T20:22:54.5083759Z fatal: the remote end hung up unexpectedly
+2026-03-31T20:22:54.5090083Z Everything up-to-date
+2026-03-31T20:22:54.5106549Z >> Failed! Reducing batch size...
+2026-03-31T20:22:54.5107842Z Fatal: Single commit push failed. Check for large files or remote limits.
+2026-03-31T20:22:54.5110768Z Failed
+2026-03-31T20:22:54.5176834Z Done (Failed) (66/154) (5709.409692803 sec)
+2026-03-31T20:22:54.5190227Z ##[endgroup]
